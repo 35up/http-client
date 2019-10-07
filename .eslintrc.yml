@@ -1,0 +1,37 @@
+extends: airbnb-base
+env:
+  browser: true
+  es6: true
+rules:
+  max-len:
+    - warn
+    - 80
+    - ignoreUrls: true
+      ignoreTemplateLiterals: true
+      ignorePattern: "^import .+ from"
+  quotes:
+    - error
+    - single
+    - avoidEscape: true
+  no-console:
+    - warn
+    - allow: [warn, error]
+  no-unused-vars:
+    - error
+    - argsIgnorePatter: "^_"
+      ignoreRestSiblings: true
+  object-curly-spacing: off
+  array-bracket-spacing: off
+  import/extensions:
+    - error
+    - always
+  space-infix-ops: off
+overrides:
+  - files:
+      - "src/**/*.test.js"
+      - "src/setupTests.js"
+    env:
+      jest: true
+      node: true
+    rules:
+      no-unused-expressions: off
