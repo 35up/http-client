@@ -28,13 +28,10 @@ rules:
   space-infix-ops: off
 overrides:
   - files:
-      - "app/**/*.test.js"
-      - "tests/**/*.js"
+      - "src/**/*.test.js"
+      - "src/setupTests.js"
     env:
-      mocha: true
+      jest: true
       node: true
     rules:
       no-unused-expressions: off
-    globals:
-      chai: true
-      sinon: true
