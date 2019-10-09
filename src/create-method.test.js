@@ -52,7 +52,7 @@ async function testFail(method, baseUrl, endpointUrl, body, options) {
 }
 
 describe('services - http', () => {
-  const baseUrl = 'https://catalog.caseable.com';
+  const baseUrl = 'https://example.com';
   const endpointUrl = '/products/';
   beforeEach(() => {
     encodeRequestBody.reset();

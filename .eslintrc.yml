@@ -22,6 +22,9 @@ rules:
       ignoreRestSiblings: true
   object-curly-spacing: off
   array-bracket-spacing: off
+  import/extensions:
+    - error
+    - never
   space-infix-ops: off
   import/prefer-default-export: warn
   no-shadow: warn
