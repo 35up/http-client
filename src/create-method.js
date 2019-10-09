@@ -10,7 +10,7 @@ function generateError(data, response) {
   return error;
 }
 
-export const createMethod = (method, baseUrl, defaultOptions = {}) => async (endpointUrl, body = null, options = {}) => {
+export const createMethod = (method, baseUrl = '', defaultOptions = {}) => async (endpointUrl, body = null, options = {}) => {
   const { withCredentials, mode } = {...defaultOptions, ...options};
   const urlEncoded = `${baseUrl}${endpointUrl}`;
   let params = {method};
