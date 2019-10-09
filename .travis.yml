@@ -12,7 +12,7 @@ cache:
     - node_modules
 
 script:
-  - make ci
+  - npm run ci
 
 notifications:
   slack:
