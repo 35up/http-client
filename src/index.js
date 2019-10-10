@@ -6,4 +6,5 @@ export default {
   patch: createMethod('PATCH'),
   delete: createMethod('DELETE'),
   head: createMethod('HEAD'),
+  createMethod,
 };
