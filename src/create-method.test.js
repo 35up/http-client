@@ -184,12 +184,12 @@ describe('services - http', () => {
           expect(decodeResponseBody).to.not.have.been.called;
         });
 
-        it('it returns header value', async () => {
+        it('returns response object', async () => {
           mockOneJsonResponse(mockData);
           const data = await method(endpointUrl);
 
           expect(data).to.not.be.null;
-          expect(data.headers.get('X-Pages')).to.be.equal('1');
+          expect(data).to.be.instanceOf(Response);
         });
       });
     });
