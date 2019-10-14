@@ -1,14 +1,13 @@
 import { createMethod } from './create-method';
-import { encodeRequestBody } from './encode-request-body';
-import { decodeResponseBody } from './decode-response-body';
 
-export default {
-  get: createMethod('GET'),
-  post: createMethod('POST'),
-  patch: createMethod('PATCH'),
-  delete: createMethod('DELETE'),
-  head: createMethod('HEAD'),
-  createMethod,
-  decodeResponseBody,
-  encodeRequestBody,
-};
+export { createMethod } from './create-method';
+export { encodeRequestBody } from './encode-request-body';
+export { decodeResponseBody } from './decode-response-body';
+
+export const get = createMethod('GET');
+export const post = createMethod('POST');
+export const patch = createMethod('PATCH');
+export const deleteMethod = createMethod('DELETE');
+export const head = createMethod('HEAD');
+
+export default createMethod;
