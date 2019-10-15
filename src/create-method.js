@@ -12,12 +12,27 @@ function generateError(data, response) {
 
 export const createMethod = (method, baseUrl = '', defaultOptions = {}) => (
   async (endpointUrl, body = null, options = {}) => {
-    const { withCredentials, mode } = {...defaultOptions, ...options};
+    const { withCredentials, mode, headers } = {
+      ...defaultOptions,
+      ...options,
+      headers: {
+        ...defaultOptions.headers,
+        ...options.headers,
+      },
+    };
     const urlEncoded = `${baseUrl}${endpointUrl}`;
-    let params = {method};
+    let params = {method, headers};
 
     if (body) {
-      params = {...params, ...encodeRequestBody(body)};
+      const bodyParams = encodeRequestBody(body);
+      params = {
+        ...params,
+        ...bodyParams,
+        headers: {
+          ...bodyParams.headers,
+          ...params.headers,
+        },
+      };
     }
 
     if (withCredentials) {

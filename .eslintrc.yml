@@ -8,7 +8,7 @@ rules:
     - 80
     - ignoreUrls: true
       ignoreTemplateLiterals: true
-      ignorePattern: "^import .+ from"
+      ignorePattern: "^import .+ from|\\s*(:?it|describe|context)\\("
   quotes:
     - error
     - single

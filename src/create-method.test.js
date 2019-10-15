@@ -33,7 +33,9 @@ async function testSuccess(method, baseUrl, endpointUrl, body, options) {
   return responseBody;
 }
 
-async function testSuccessWithBody(method, baseUrl, endpointUrl, body, options) {
+async function testSuccessWithBody(
+  method, baseUrl, endpointUrl, body, options,
+) {
   await testSuccess(method, baseUrl, endpointUrl, body, options);
   expect(fetch.mock.calls[0][1].body).to.be.deep.equal(JSON.stringify(body));
 }
@@ -117,6 +119,14 @@ describe('services - http', () => {
           .to.include(encodeRequestBody.firstCall.returnValue.headers);
       });
 
+      it('does not override the other headers of the request with the ones provided by `encodeResponseBody`', async () => {
+        const body = {foo: 'bar'};
+        const options = {headers: {'Content-Type': 'application/octet-stream'}};
+        await testSuccessWithBody(method, baseUrl, endpointUrl, body, options);
+
+        expect(fetch.mock.calls[0][1].headers).to.include(options.headers);
+      });
+
       it('do not include credentials by default', async () => {
         await testSuccess(method, baseUrl, endpointUrl);
         expect(fetch.mock.calls[0][1].credentials).to.be.undefined;
@@ -144,35 +154,52 @@ describe('services - http', () => {
         expect(fetch.mock.calls[0][1].mode).to.be.equal('cors');
       });
 
+      it('uses the headers specified in the options', async () => {
+        const headers = {'Content-Type': 'application/octet-stream'};
+        await testSuccess(
+          method,
+          baseUrl,
+          endpointUrl,
+          null,
+          {headers},
+        );
+        expect(fetch.mock.calls[0][1].headers).to.include(headers);
+      });
+
       describe('when createMethod was called with default options', () => {
-        let method;
+        const headers = {'Content-Type': 'application/octet-stream'};
 
         beforeEach(() => {
-          method = createMethod('PUT', baseUrl, {mode: 'cors', withCredentials: true});
+          method = createMethod(
+            'PUT',
+            baseUrl,
+            {mode: 'cors', withCredentials: true, headers},
+          );
         });
 
         it('uses default configuration', async () => {
           await testSuccess(method, baseUrl, endpointUrl);
           expect(fetch.mock.calls[0][1].credentials).to.be.equal('include');
           expect(fetch.mock.calls[0][1].mode).to.be.equal('cors');
+          expect(fetch.mock.calls[0][1].headers).to.include(headers);
         });
 
         it('options provided to the function take precedence over the default configurations', async () => {
+          const newHeaders = {Authorization: 'Basic 234567zHB==='};
           await testSuccess(
             method,
             baseUrl,
             endpointUrl,
             null,
-            {mode: 'navigation', withCredentials: false},
+            {mode: 'navigation', withCredentials: false, headers: newHeaders},
           );
           expect(fetch.mock.calls[0][1].credentials).to.be.undefined;
           expect(fetch.mock.calls[0][1].mode).to.be.equal('navigation');
+          expect(fetch.mock.calls[0][1].headers).to.include(newHeaders);
         });
       });
 
       describe('when the function was created for the "HEAD" method', () => {
-        let method;
-
         beforeEach(() => {
           method = createMethod('HEAD', baseUrl);
         });
