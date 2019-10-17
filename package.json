@@ -1,9 +1,10 @@
 {
   "name": "@caseable/http-client",
   "version": "0.0.2",
-  "main": "dist/http-client.js",
+  "main": "dist/http-client.umd.js",
+  "module": "dist/http-client.esm.js",
   "scripts": {
-    "build": "webpack",
+    "build": "rollup --config",
     "lint": "eslint src/*",
     "test": "jest --passWithNoTests",
     "test:ci": "npm test -- --ci --forceExit --runInBand",
@@ -28,19 +29,17 @@
     "@babel/core": "^7.5.4",
     "@babel/preset-env": "^7.5.4",
     "babel-eslint": "^10.0.2",
-    "babel-loader": "^8.0.6",
     "babel-plugin-transform-async-to-promises": "^0.8.14",
     "chai": "^4.2.0",
     "core-js": "^3.1.4",
     "eslint": "^5.3.0",
     "eslint-config-airbnb": "^17.1.1",
-    "eslint-loader": "^2.2.1",
     "eslint-plugin-import": "^2.18.0",
     "jest": "^24.9.0",
     "jest-fetch-mock": "^2.1.2",
+    "rollup": "^1.24.0",
+    "rollup-plugin-babel": "^4.3.3",
     "sinon": "^7.5.0",
-    "webpack": "^4.35.3",
-    "webpack-cli": "^3.3.5",
     "sinon-chai": "^3.3.0"
   }
 }
