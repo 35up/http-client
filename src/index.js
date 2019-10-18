@@ -6,6 +6,7 @@ export { decodeResponseBody } from './decode-response-body';
 
 export const get = createMethod('GET');
 export const post = createMethod('POST');
+export const put = createMethod('PUT');
 export const patch = createMethod('PATCH');
 export const deleteMethod = createMethod('DELETE');
 export const head = createMethod('HEAD');
