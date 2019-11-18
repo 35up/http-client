@@ -10,14 +10,17 @@ function generateError(data, response) {
   return error;
 }
 
-function parseHeaders(headers) {
-  return Object.fromEntries(
-    Object.entries(headers)
-      .map(([ key, value ]) => [
-        key,
-        typeof value === 'function' ? value.call() : value,
-      ]),
-  );
+function parseHeaders(rawHeaders) {
+  const headersEntries = Object.entries(rawHeaders)
+    .map(([ key, value ]) => [
+      key,
+      typeof value === 'function' ? value.call() : value,
+    ]);
+
+  return headersEntries.reduce((headers, [ key, value ]) => ({
+    ...headers,
+    [key]: value,
+  }), {});
 }
 
 export const createMethod = (method, baseUrl = '', defaultOptions = {}) => (

@@ -1,9 +1,6 @@
 import sinon from 'sinon';
 import { expect } from 'chai';
-import {
-  mockOneJsonResponse,
-  resetRequestMocks,
-} from './test/mock-response';
+import { mockOneJsonResponse, resetRequestMocks } from './test/mock-response';
 import { createMethod } from './create-method';
 import { encodeRequestBody } from './encode-request-body';
 import { decodeResponseBody } from './decode-response-body';
@@ -129,13 +126,10 @@ describe('services - http', () => {
 
       it('adds the headers provided as a function', async () => {
         const body = {foo: 'bar'};
-        const newFunctionHeader = (
-          {'Content-Header-Function': 'application/testing'}
-        );
-        const options = {headers: newFunctionHeader};
+        const options = {headers: {'content-type': () => 'application/testing'}};
 
         await testSuccessWithBody(method, baseUrl, endpointUrl, body, options);
-        expect(fetch.mock.calls[0][1].headers).to.include(options.headers);
+        expect(fetch.mock.calls[0][1].headers).to.include({'content-type': 'application/testing'});
       });
 
       it('do not include credentials by default', async () => {
