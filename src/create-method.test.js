@@ -127,6 +127,17 @@ describe('services - http', () => {
         expect(fetch.mock.calls[0][1].headers).to.include(options.headers);
       });
 
+      it('adds the headers provided as a function', async () => {
+        const body = {foo: 'bar'};
+        const newFunctionHeader = (
+          {'Content-Header-Function': 'application/testing'}
+        );
+        const options = {headers: newFunctionHeader};
+
+        await testSuccessWithBody(method, baseUrl, endpointUrl, body, options);
+        expect(fetch.mock.calls[0][1].headers).to.include(options.headers);
+      });
+
       it('do not include credentials by default', async () => {
         await testSuccess(method, baseUrl, endpointUrl);
         expect(fetch.mock.calls[0][1].credentials).to.be.undefined;
