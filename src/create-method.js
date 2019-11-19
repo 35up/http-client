@@ -10,6 +10,19 @@ function generateError(data, response) {
   return error;
 }
 
+function parseHeaders(rawHeaders) {
+  const headersEntries = Object.entries(rawHeaders)
+    .map(([ key, value ]) => [
+      key,
+      typeof value === 'function' ? value.call() : value,
+    ]);
+
+  return headersEntries.reduce((headers, [ key, value ]) => ({
+    ...headers,
+    [key]: value,
+  }), {});
+}
+
 export const createMethod = (method, baseUrl = '', defaultOptions = {}) => (
   async (endpointUrl, body = null, options = {}) => {
     const { withCredentials, mode, headers } = {
@@ -42,6 +55,8 @@ export const createMethod = (method, baseUrl = '', defaultOptions = {}) => (
     if (mode) {
       params = {...params, mode};
     }
+
+    params = {...params, headers: parseHeaders(params.headers)};
 
     const response = await fetch(urlEncoded, params);
 
