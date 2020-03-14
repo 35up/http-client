@@ -1,5 +1,6 @@
 import { encodeRequestBody } from './encode-request-body';
 import { decodeResponseBody } from './decode-response-body';
+import { addUrlParams } from './add-url-params';
 
 function generateError(data, response) {
   const error = new Error(
@@ -25,7 +26,12 @@ function parseHeaders(rawHeaders) {
 
 export const createMethod = (method, baseUrl = '', defaultOptions = {}) => (
   async (endpointUrl, body = null, options = {}) => {
-    const { withCredentials, mode, headers } = {
+    const {
+      withCredentials,
+      mode,
+      params: urlParams,
+      headers,
+    } = {
       ...defaultOptions,
       ...options,
       headers: {
@@ -33,7 +39,10 @@ export const createMethod = (method, baseUrl = '', defaultOptions = {}) => (
         ...options.headers,
       },
     };
-    const urlEncoded = `${baseUrl}${endpointUrl}`;
+
+    let urlEncoded = `${baseUrl}${endpointUrl}`;
+    urlEncoded = addUrlParams(urlEncoded, urlParams);
+
     let params = {method, headers};
 
     if (body) {

@@ -4,6 +4,7 @@ import { mockOneJsonResponse, resetRequestMocks } from './test/mock-response';
 import { createMethod } from './create-method';
 import { encodeRequestBody } from './encode-request-body';
 import { decodeResponseBody } from './decode-response-body';
+import { addUrlParams } from './add-url-params';
 
 jest.mock('./decode-response-body');
 jest.mock('./encode-request-body');
@@ -26,7 +27,7 @@ async function testSuccess(method, baseUrl, endpointUrl, body, options) {
   mockOneJsonResponse(mockData);
   const responseBody = await method(endpointUrl, body, options);
   expect(responseBody).to.be.deep.equal(mockData);
-  expect(fetch.mock.calls[0][0]).to.be.equal(`${baseUrl}${endpointUrl}`);
+  expect(fetch.mock.calls[0][0]).to.contain(`${baseUrl}${endpointUrl}`);
   return responseBody;
 }
 
@@ -169,6 +170,19 @@ describe('services - http', () => {
           {headers},
         );
         expect(fetch.mock.calls[0][1].headers).to.include(headers);
+      });
+
+      it('adds parameters to url when provided', async () => {
+        const params = {partnerId: 'caseable'};
+        await testSuccess(
+          method,
+          baseUrl,
+          endpointUrl,
+          null,
+          {params},
+        );
+        const url = `${baseUrl}${endpointUrl}`;
+        expect(fetch.mock.calls[0][0]).to.be.equal(addUrlParams(url, params));
       });
 
       describe('when createMethod was called with default options', () => {
