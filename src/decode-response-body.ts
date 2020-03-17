@@ -3,21 +3,23 @@ const JSON_MIME_TYPES = [
   'text/x-json',
 ];
 
-function isJSON(contentType) {
+function isJSON(contentType: string): boolean {
   return contentType && JSON_MIME_TYPES.some(
     mime => contentType.startsWith(mime),
   );
 }
 
-async function decodeJSON(response) {
+async function decodeJSON(response: Response): Promise<JSON> {
   return response.json();
 }
 
-async function decodeText(response) {
+async function decodeText(response): Promise<string> {
   return response.text();
 }
 
-export async function decodeResponseBody(response) {
+export async function decodeResponseBody(
+  response: Response,
+): Promise<JSON | string> {
   const contentType = response.headers.get('Content-Type');
 
   if (isJSON(contentType)) {
