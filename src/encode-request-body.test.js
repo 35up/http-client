@@ -2,9 +2,8 @@ import { expect } from 'chai';
 import { encodeRequestBody } from './encode-request-body';
 
 describe('encodeRequestBody', () => {
-  const body = {name: 'joe doe'};
-
   it('encode the body as JSON', () => {
+    const body = {name: 'joe doe'};
     const result = encodeRequestBody(body);
 
     expect(result).to.have.property('body').equals(JSON.stringify(body));

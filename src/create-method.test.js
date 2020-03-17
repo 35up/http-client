@@ -127,10 +127,13 @@ describe('services - http', () => {
 
       it('adds the headers provided as a function', async () => {
         const body = {foo: 'bar'};
-        const options = {headers: {'content-type': () => 'application/testing'}};
+        const options = {
+          headers: {'content-type': () => 'application/testing'},
+        };
 
         await testSuccessWithBody(method, baseUrl, endpointUrl, body, options);
-        expect(fetch.mock.calls[0][1].headers).to.include({'content-type': 'application/testing'});
+        expect(fetch.mock.calls[0][1].headers)
+          .to.include({'content-type': 'application/testing'});
       });
 
       it('do not include credentials by default', async () => {
