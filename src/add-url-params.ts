@@ -1,8 +1,6 @@
-export function addUrlParams(url, params) {
-  if (!params || typeof params !== 'object') {
-    return url;
-  }
+import { TObject } from './types';
 
+export function addUrlParams(url: string, params: TObject): string {
   const [ baseUrl, queryParams ] = url.split('?');
   const query = new URLSearchParams(queryParams);
 
