@@ -1,9 +1,10 @@
 import { encodeRequestBody } from './encode-request-body';
 import { decodeResponseBody } from './decode-response-body';
 import { addUrlParams } from './add-url-params';
+import { TMethodError, TDefaultOptions, TMethods } from './types';
 
-function generateError(data, response) {
-  const error = new Error(
+function generateError(data: any, response: Response): TMethodError {
+  const error: TMethodError = new Error(
     (data && data.error) || `${response.status} ${response.statusText}`,
   );
   error.data = data;
@@ -11,11 +12,11 @@ function generateError(data, response) {
   return error;
 }
 
-function parseHeaders(rawHeaders) {
+function parseHeaders(rawHeaders: HeadersInit): HeadersInit {
   const headersEntries = Object.entries(rawHeaders)
     .map(([ key, value ]) => [
       key,
-      typeof value === 'function' ? value.call() : value,
+      typeof value === 'function' ? value() : value,
     ]);
 
   return headersEntries.reduce((headers, [ key, value ]) => ({
@@ -24,12 +25,20 @@ function parseHeaders(rawHeaders) {
   }), {});
 }
 
-export const createMethod = (method, baseUrl = '', defaultOptions = {}) => (
-  async (endpointUrl, body = null, options = {}) => {
+export const createMethod = (
+  method: TMethods,
+  baseUrl = '',
+  defaultOptions: TDefaultOptions = {},
+) => (
+  async (
+    endpointUrl: string,
+    body: BodyInit = null,
+    options: TDefaultOptions = {},
+  ): Promise<string | Response | JSON | TMethodError> => {
     const {
       withCredentials,
       mode,
-      params: urlParams,
+      params: urlParams = {},
       headers,
     } = {
       ...defaultOptions,
@@ -43,7 +52,7 @@ export const createMethod = (method, baseUrl = '', defaultOptions = {}) => (
     let urlEncoded = `${baseUrl}${endpointUrl}`;
     urlEncoded = addUrlParams(urlEncoded, urlParams);
 
-    let params = {method, headers};
+    let params: TDefaultOptions = {method, headers};
 
     if (body) {
       const bodyParams = encodeRequestBody(body);

@@ -1,13 +1,23 @@
 import sinon from 'sinon';
 import { expect } from 'chai';
+import fetch from 'jest-fetch-mock';
+import { ImportMock } from 'ts-mock-imports';
 import { mockOneJsonResponse, resetRequestMocks } from './test/mock-response';
+import * as decodeModule from './decode-response-body';
+import * as encodeModule from './encode-request-body';
 import { createMethod } from './create-method';
-import { encodeRequestBody } from './encode-request-body';
-import { decodeResponseBody } from './decode-response-body';
 import { addUrlParams } from './add-url-params';
+import { TObject } from './types';
 
-jest.mock('./decode-response-body');
-jest.mock('./encode-request-body');
+const decodeResponseBody = ImportMock.mockFunction(
+  decodeModule,
+  'decodeResponseBody',
+).callThrough();
+const encodeRequestBody = ImportMock.mockFunction(
+  encodeModule,
+  'encodeRequestBody',
+).callThrough();
+
 
 const mockData = {
   productTypes: [
@@ -23,7 +33,13 @@ const mockData = {
   ],
 };
 
-async function testSuccess(method, baseUrl, endpointUrl, body, options) {
+async function testSuccess(
+  method: any,
+  baseUrl: string,
+  endpointUrl: string,
+  body?: any,
+  options?: TObject,
+): Promise<object> {
   mockOneJsonResponse(mockData);
   const responseBody = await method(endpointUrl, body, options);
   expect(responseBody).to.be.deep.equal(mockData);
@@ -32,13 +48,23 @@ async function testSuccess(method, baseUrl, endpointUrl, body, options) {
 }
 
 async function testSuccessWithBody(
-  method, baseUrl, endpointUrl, body, options,
-) {
+  method: any,
+  baseUrl: string,
+  endpointUrl: string,
+  body?: any,
+  options?: TObject,
+): Promise<void> {
   await testSuccess(method, baseUrl, endpointUrl, body, options);
   expect(fetch.mock.calls[0][1].body).to.be.deep.equal(JSON.stringify(body));
 }
 
-async function testFail(method, baseUrl, endpointUrl, body, options) {
+async function testFail(
+  method: any,
+  baseUrl: string,
+  endpointUrl: string,
+  body?: any,
+  options?: TObject,
+): Promise<void> {
   mockOneJsonResponse({error: 'Oops'}, {status: 400});
 
   let error;
@@ -128,7 +154,7 @@ describe('services - http', () => {
       it('adds the headers provided as a function', async () => {
         const body = {foo: 'bar'};
         const options = {
-          headers: {'content-type': () => 'application/testing'},
+          headers: {'content-type': (): string => 'application/testing'},
         };
 
         await testSuccessWithBody(method, baseUrl, endpointUrl, body, options);
