@@ -1,7 +1,7 @@
 import { encodeRequestBody } from './encode-request-body';
 import { decodeResponseBody } from './decode-response-body';
 import { addUrlParams } from './add-url-params';
-import { TObject } from './types';
+import { TObject, TBody } from './types';
 
 export type TMethods = 'get' | 'GET'
 | 'delete' | 'DELETE'
@@ -19,8 +19,7 @@ export type TMethodError = Error & {
   response?: Response;
 }
 
-export type TDefaultOptions = {
-  [key: string]: any;
+export type TDefaultOptions = TObject & {
   headers?: HeadersInit;
   withCredentials?: boolean;
   mode?: RequestMode;
@@ -56,13 +55,13 @@ export const createMethod = (
 ) => (
   async (
     endpointUrl: string,
-    body: BodyInit = null,
+    body: TBody = null,
     options: TDefaultOptions = {},
   ): Promise<string | Response | JSON | TMethodError> => {
     const {
       withCredentials,
       mode,
-      params: urlParams = {},
+      params: urlParams,
       headers,
     } = {
       ...defaultOptions,

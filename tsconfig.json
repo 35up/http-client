@@ -15,6 +15,5 @@
     "**/test/*",
     "**/*.test.*",
     "src/setup-tests.ts",
-    "src/types.ts",
   ]
 }

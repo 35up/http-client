@@ -154,7 +154,7 @@ describe('services - http', () => {
       it('adds the headers provided as a function', async () => {
         const body = {foo: 'bar'};
         const options = {
-          headers: {'content-type': (): string => 'application/testing'},
+          headers: {'content-type': () => 'application/testing'},
         };
 
         await testSuccessWithBody(method, baseUrl, endpointUrl, body, options);
