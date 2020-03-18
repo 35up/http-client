@@ -1,7 +1,31 @@
 import { encodeRequestBody } from './encode-request-body';
 import { decodeResponseBody } from './decode-response-body';
 import { addUrlParams } from './add-url-params';
-import { TMethodError, TDefaultOptions, TMethods } from './types';
+import { TObject } from './types';
+
+export type TMethods = 'get' | 'GET'
+| 'delete' | 'DELETE'
+| 'head' | 'HEAD'
+| 'options' | 'OPTIONS'
+| 'post' | 'POST'
+| 'put' | 'PUT'
+| 'patch' | 'PATCH'
+| 'purge' | 'PURGE'
+| 'link' | 'LINK'
+| 'unlink' | 'UNLINK';
+
+export type TMethodError = Error & {
+  data?: any;
+  response?: Response;
+}
+
+export type TDefaultOptions = {
+  [key: string]: any;
+  headers?: HeadersInit;
+  withCredentials?: boolean;
+  mode?: RequestMode;
+  params?: TObject;
+}
 
 function generateError(data: any, response: Response): TMethodError {
   const error: TMethodError = new Error(

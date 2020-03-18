@@ -1,4 +1,7 @@
-import { TEncondedRequest } from './types';
+export type TEncondedRequest = {
+  headers: HeadersInit;
+  body: string | JSON | BodyInit;
+}
 
 function encodeRequestBodyURL(body: BodyInit): TEncondedRequest {
   return {
