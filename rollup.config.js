@@ -1,4 +1,3 @@
-import babel from 'rollup-plugin-babel';
 import typescript from 'rollup-plugin-typescript2';
 // eslint-disable-next-line import/extensions
 import pkg from './package.json';
@@ -19,9 +18,5 @@ export default {
   ],
   plugins: [
     typescript({ useTsconfigDeclarationDir: true }),
-    babel({
-      exclude: 'node_modules/**',
-      extensions: ['.ts'],
-    }),
   ],
 };
