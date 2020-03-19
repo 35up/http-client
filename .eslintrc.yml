@@ -5,6 +5,9 @@ extends:
 parser: '@typescript-eslint/parser'
 plugins: 
   - '@typescript-eslint'
-rules:
-  '@typescript-eslint/explicit-function-return-type':
-    - allowExpressions: true
+overrides:
+  - 
+    files:
+      - "**/*.test.ts"
+    rules:
+      "@typescript-eslint/ban-ts-ignore": off

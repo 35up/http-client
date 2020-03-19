@@ -1,9 +1,11 @@
 import { encodeRequestBody } from './encode-request-body';
 import { decodeResponseBody } from './decode-response-body';
 import { addUrlParams } from './add-url-params';
-import { TObject, TBody } from './types';
+import { TSearchParams, THeaders, TObject } from './types';
 
-export type TMethods = 'get' | 'GET'
+export type TRawHeaders = THeaders | Record<string, () => string>;
+
+export type THttpMethods = 'get' | 'GET'
 | 'delete' | 'DELETE'
 | 'head' | 'HEAD'
 | 'options' | 'OPTIONS'
@@ -14,16 +16,24 @@ export type TMethods = 'get' | 'GET'
 | 'link' | 'LINK'
 | 'unlink' | 'UNLINK';
 
+export type TMethod = (
+  <TBody = null, TResponse = string>(
+    endpointUrl: string,
+    body: TBody,
+    options?: TOptions,
+  ) => Promise<TResponse>
+)
+
 export type TMethodError = Error & {
   data?: any;
   response?: Response;
 }
 
-export type TDefaultOptions = TObject & {
-  headers?: HeadersInit;
+export type TOptions = {
+  headers?: THeaders;
   withCredentials?: boolean;
   mode?: RequestMode;
-  params?: TObject;
+  params?: TSearchParams;
 }
 
 function generateError(data: any, response: Response): TMethodError {
@@ -35,7 +45,7 @@ function generateError(data: any, response: Response): TMethodError {
   return error;
 }
 
-function parseHeaders(rawHeaders: HeadersInit): HeadersInit {
+function parseHeaders(rawHeaders: TRawHeaders): THeaders {
   const headersEntries = Object.entries(rawHeaders)
     .map(([ key, value ]) => [
       key,
@@ -49,15 +59,15 @@ function parseHeaders(rawHeaders: HeadersInit): HeadersInit {
 }
 
 export const createMethod = (
-  method: TMethods,
+  method: THttpMethods,
   baseUrl = '',
-  defaultOptions: TDefaultOptions = {},
+  defaultOptions: TOptions = {},
 ) => (
   async (
     endpointUrl: string,
-    body: TBody = null,
-    options: TDefaultOptions = {},
-  ): Promise<string | Response | JSON | TMethodError> => {
+    body = null,
+    options: TOptions = {},
+  ): Promise<string | Response | JSON> => {
     const {
       withCredentials,
       mode,
@@ -75,7 +85,7 @@ export const createMethod = (
     let urlEncoded = `${baseUrl}${endpointUrl}`;
     urlEncoded = addUrlParams(urlEncoded, urlParams);
 
-    let params: TDefaultOptions = {method, headers};
+    let params: TObject = {method, headers};
 
     if (body) {
       const bodyParams = encodeRequestBody(body);

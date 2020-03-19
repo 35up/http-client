@@ -1,3 +1,5 @@
 export type TObject = Record<string, any>;
 
-export type TBody = URLSearchParams | FormData | TObject | TObject[] | string;
+export type THeaders = Record<string, string>;
+
+export type TSearchParams = Record<string, string | string[]>;

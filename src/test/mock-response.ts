@@ -1,16 +1,16 @@
-import fetch, { FetchMock } from 'jest-fetch-mock';
+import fetch, { FetchMock, MockParams } from 'jest-fetch-mock';
 import { TObject } from '../types';
 
 export function mockOneResponse(
   response: string,
-  configuration: TObject = {},
+  configuration: MockParams = {},
 ): FetchMock {
   return fetch.once(response, configuration);
 }
 
 export function mockOneJsonResponse(
-  response: TObject,
-  configuration: TObject = {},
+  response: TObject | TObject[],
+  configuration: MockParams = {},
 ): FetchMock {
   return mockOneResponse(
     JSON.stringify(response),

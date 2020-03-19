@@ -13,7 +13,7 @@ async function decodeJSON(response: Response): Promise<JSON> {
   return response.json();
 }
 
-async function decodeText(response): Promise<string> {
+async function decodeText(response: Response): Promise<string> {
   return response.text();
 }
 

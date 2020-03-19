@@ -5,7 +5,7 @@ import { ImportMock } from 'ts-mock-imports';
 import { mockOneJsonResponse, resetRequestMocks } from './test/mock-response';
 import * as decodeModule from './decode-response-body';
 import * as encodeModule from './encode-request-body';
-import { createMethod } from './create-method';
+import { createMethod, TOptions } from './create-method';
 import { addUrlParams } from './add-url-params';
 import { TObject } from './types';
 
@@ -38,7 +38,7 @@ async function testSuccess(
   baseUrl: string,
   endpointUrl: string,
   body?: any,
-  options?: TObject,
+  options?: TOptions,
 ): Promise<object> {
   mockOneJsonResponse(mockData);
   const responseBody = await method(endpointUrl, body, options);
@@ -234,15 +234,16 @@ describe('services - http', () => {
 
         it('options provided to the function take precedence over the default configurations', async () => {
           const newHeaders = {Authorization: 'Basic 234567zHB==='};
+          const mode = 'navigate';
           await testSuccess(
             method,
             baseUrl,
             endpointUrl,
             null,
-            {mode: 'navigation', withCredentials: false, headers: newHeaders},
+            {mode, withCredentials: false, headers: newHeaders},
           );
           expect(fetch.mock.calls[0][1].credentials).to.be.undefined;
-          expect(fetch.mock.calls[0][1].mode).to.be.equal('navigation');
+          expect(fetch.mock.calls[0][1].mode).to.be.equal(mode);
           expect(fetch.mock.calls[0][1].headers).to.include(newHeaders);
         });
       });
