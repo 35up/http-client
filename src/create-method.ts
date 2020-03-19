@@ -1,27 +1,24 @@
 import { encodeRequestBody } from './encode-request-body';
 import { decodeResponseBody } from './decode-response-body';
 import { addUrlParams } from './add-url-params';
-import { TSearchParams, THeaders, TObject } from './types';
+import { TSearchParams, THeaders, TJson } from './types';
 
-export type TRawHeaders = THeaders | Record<string, () => string>;
+export type TRawHeaders = Record<string, string | (() => string)>;
 
 export type THttpMethods = 'get' | 'GET'
-| 'delete' | 'DELETE'
-| 'head' | 'HEAD'
-| 'options' | 'OPTIONS'
-| 'post' | 'POST'
-| 'put' | 'PUT'
-| 'patch' | 'PATCH'
-| 'purge' | 'PURGE'
-| 'link' | 'LINK'
-| 'unlink' | 'UNLINK';
+  | 'delete' | 'DELETE'
+  | 'head' | 'HEAD'
+  | 'options' | 'OPTIONS'
+  | 'post' | 'POST'
+  | 'put' | 'PUT'
+  | 'patch' | 'PATCH'
+  | 'purge' | 'PURGE'
+  | 'link' | 'LINK'
+  | 'unlink' | 'UNLINK';
 
 export type TMethod = (
-  <TBody = null, TResponse = string>(
-    endpointUrl: string,
-    body: TBody,
-    options?: TOptions,
-  ) => Promise<TResponse>
+  (endpointUrl: string, body: any, options?: TOptions) =>
+    Promise<string | Response | TJson>
 )
 
 export type TMethodError = Error & {
@@ -30,7 +27,7 @@ export type TMethodError = Error & {
 }
 
 export type TOptions = {
-  headers?: THeaders;
+  headers?: TRawHeaders;
   withCredentials?: boolean;
   mode?: RequestMode;
   params?: TSearchParams;
@@ -62,41 +59,30 @@ export const createMethod = (
   method: THttpMethods,
   baseUrl = '',
   defaultOptions: TOptions = {},
-) => (
+): TMethod => (
   async (
     endpointUrl: string,
     body = null,
     options: TOptions = {},
-  ): Promise<string | Response | JSON> => {
+  ): Promise<string | Response | TJson> => {
     const {
       withCredentials,
       mode,
       params: urlParams,
-      headers,
-    } = {
-      ...defaultOptions,
-      ...options,
-      headers: {
-        ...defaultOptions.headers,
-        ...options.headers,
-      },
-    };
+    } = { ...defaultOptions, ...options };
 
     let urlEncoded = `${baseUrl}${endpointUrl}`;
     urlEncoded = addUrlParams(urlEncoded, urlParams);
-
-    let params: TObject = {method, headers};
+    let headers: TRawHeaders = {
+      ...defaultOptions.headers,
+      ...options.headers,
+    };
+    let params: RequestInit = {method};
 
     if (body) {
       const bodyParams = encodeRequestBody(body);
-      params = {
-        ...params,
-        ...bodyParams,
-        headers: {
-          ...bodyParams.headers,
-          ...params.headers,
-        },
-      };
+      headers = { ...bodyParams.headers, ...headers };
+      params = {...params, ...bodyParams};
     }
 
     if (withCredentials) {
@@ -107,7 +93,7 @@ export const createMethod = (
       params = {...params, mode};
     }
 
-    params = {...params, headers: parseHeaders(params.headers)};
+    params = {...params, headers: parseHeaders(headers)};
 
     const response = await fetch(urlEncoded, params);
 

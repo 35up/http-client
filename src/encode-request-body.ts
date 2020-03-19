@@ -1,4 +1,4 @@
-import { TObject, THeaders } from './types';
+import { THeaders } from './types';
 
 export interface EncondedRequest<T = string> {
   headers: THeaders;
@@ -26,7 +26,7 @@ function encodeRequestBodyTextPlain(body: string): EncondedRequest {
   };
 }
 
-function encodeRequestBodyJSON(body: TObject | TObject[]): EncondedRequest {
+function encodeRequestBodyJSON(body: JSON): EncondedRequest {
   return {
     body: JSON.stringify(body),
     headers: {'Content-Type': 'application/json'},
@@ -47,9 +47,11 @@ export function encodeRequestBody(
 ): EncondedRequest<string | FormData> {
   if (body instanceof URLSearchParams) {
     return encodeRequestBodyURL(body);
-  } if (body instanceof FormData) {
+  }
+  if (body instanceof FormData) {
     return encodeRequestBodyMultiPart(body);
-  } if (typeof body === 'string') {
+  }
+  if (typeof body === 'string') {
     return encodeRequestBodyTextPlain(body);
   }
   return encodeRequestBodyJSON(body);

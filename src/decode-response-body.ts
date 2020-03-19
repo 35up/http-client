@@ -1,3 +1,5 @@
+import { TJson } from './types';
+
 const JSON_MIME_TYPES = [
   'application/json',
   'text/x-json',
@@ -9,7 +11,7 @@ function isJSON(contentType: string): boolean {
   );
 }
 
-async function decodeJSON(response: Response): Promise<JSON> {
+async function decodeJSON(response: Response): Promise<TJson> {
   return response.json();
 }
 
@@ -19,7 +21,7 @@ async function decodeText(response: Response): Promise<string> {
 
 export async function decodeResponseBody(
   response: Response,
-): Promise<JSON | string> {
+): Promise<TJson | string> {
   const contentType = response.headers.get('Content-Type');
 
   if (isJSON(contentType)) {

@@ -1,8 +1,8 @@
 {
   "name": "@caseable/http-client",
   "version": "0.0.6",
-  "main": "dist/http-client.umd.ts",
-  "module": "dist/http-client.esm.ts",
+  "main": "dist/http-client.umd.js",
+  "module": "dist/http-client.esm.js",
   "typings": "dist/types",
   "scripts": {
     "build": "rollup --config",

@@ -1,5 +1,5 @@
 import fetch, { FetchMock, MockParams } from 'jest-fetch-mock';
-import { TObject } from '../types';
+import { TJson } from '../types';
 
 export function mockOneResponse(
   response: string,
@@ -9,7 +9,7 @@ export function mockOneResponse(
 }
 
 export function mockOneJsonResponse(
-  response: TObject | TObject[],
+  response: TJson,
   configuration: MockParams = {},
 ): FetchMock {
   return mockOneResponse(

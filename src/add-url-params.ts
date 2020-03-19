@@ -13,7 +13,7 @@ export function addUrlParams(
 
   Object.entries(params).forEach(([ key, value ]) => {
     if (value) {
-      query.append(key, value.toLocaleString());
+      query.append(key, value.toString());
     }
   });
 

@@ -5,9 +5,10 @@ import { ImportMock } from 'ts-mock-imports';
 import { mockOneJsonResponse, resetRequestMocks } from './test/mock-response';
 import * as decodeModule from './decode-response-body';
 import * as encodeModule from './encode-request-body';
-import { createMethod, TOptions } from './create-method';
+import { createMethod, TOptions, TMethod } from './create-method';
 import { addUrlParams } from './add-url-params';
-import { TObject } from './types';
+import { TJson } from './types';
+
 
 const decodeResponseBody = ImportMock.mockFunction(
   decodeModule,
@@ -34,12 +35,12 @@ const mockData = {
 };
 
 async function testSuccess(
-  method: any,
+  method: TMethod,
   baseUrl: string,
   endpointUrl: string,
   body?: any,
   options?: TOptions,
-): Promise<object> {
+): Promise<TJson | Response> {
   mockOneJsonResponse(mockData);
   const responseBody = await method(endpointUrl, body, options);
   expect(responseBody).to.be.deep.equal(mockData);
@@ -48,22 +49,22 @@ async function testSuccess(
 }
 
 async function testSuccessWithBody(
-  method: any,
+  method: TMethod,
   baseUrl: string,
   endpointUrl: string,
   body?: any,
-  options?: TObject,
+  options?: TOptions,
 ): Promise<void> {
   await testSuccess(method, baseUrl, endpointUrl, body, options);
   expect(fetch.mock.calls[0][1].body).to.be.deep.equal(JSON.stringify(body));
 }
 
 async function testFail(
-  method: any,
+  method: TMethod,
   baseUrl: string,
   endpointUrl: string,
   body?: any,
-  options?: TObject,
+  options?: TOptions,
 ): Promise<void> {
   mockOneJsonResponse({error: 'Oops'}, {status: 400});
 
