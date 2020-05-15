@@ -15,5 +15,6 @@
     "**/test/*",
     "**/*.test.*",
     "src/setup-tests.ts",
+    "dist"
   ]
 }
