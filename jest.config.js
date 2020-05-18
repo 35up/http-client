@@ -1,6 +1,6 @@
 module.exports = {
   setupFilesAfterEnv: [
-    './src/setupTests.js',
+    './src/setup-tests.ts',
   ],
   testPathIgnorePatterns: [
     '/node_modules/',
@@ -10,6 +10,6 @@ module.exports = {
     'lcov',
   ],
   collectCoverageFrom: [
-    'src/**/*.js',
+    'src/**/*.ts',
   ],
 };

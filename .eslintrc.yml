@@ -1,45 +1,13 @@
-extends: airbnb-base
-env:
-  browser: true
-  es6: true
-rules:
-  max-len:
-    - warn
-    - 80
-    - ignoreUrls: true
-      ignoreTemplateLiterals: true
-      ignorePattern: "^import .+ from"
-  quotes:
-    - error
-    - single
-    - avoidEscape: true
-  no-console:
-    - warn
-    - allow: [warn, error]
-  no-unused-vars:
-    - error
-    - argsIgnorePatter: "^_"
-      ignoreRestSiblings: true
-  object-curly-spacing: off
-  array-bracket-spacing: off
-  import/extensions:
-    - error
-    - never
-  space-infix-ops: off
-  import/prefer-default-export: warn
-  no-shadow: warn
+extends:
+  - '@caseable/35up-base'
+  - 'plugin:@typescript-eslint/eslint-recommended'
+  - 'plugin:@typescript-eslint/recommended'
+parser: '@typescript-eslint/parser'
+plugins: 
+  - '@typescript-eslint'
 overrides:
-  - files:
-      - "src/**/*.test.js"
-      - "src/setupTests.js"
-    env:
-      jest: true
-      node: true
+  - 
+    files:
+      - "**/*.test.ts"
     rules:
-      no-unused-expressions: off
-      import/no-extraneous-dependencies:
-        - error
-        - devDependencies: true
-settings:
-  import/extensions:
-    - ".js"
+      "@typescript-eslint/ban-ts-ignore": off

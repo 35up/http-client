@@ -1,15 +1,24 @@
 import sinon from 'sinon';
 import { expect } from 'chai';
-import {
-  mockOneJsonResponse,
-  resetRequestMocks,
-} from './test/mock-response';
-import { createMethod } from './create-method';
-import { encodeRequestBody } from './encode-request-body';
-import { decodeResponseBody } from './decode-response-body';
+import fetch from 'jest-fetch-mock';
+import { ImportMock } from 'ts-mock-imports';
+import { mockOneJsonResponse, resetRequestMocks } from './test/mock-response';
+import * as decodeModule from './decode-response-body';
+import * as encodeModule from './encode-request-body';
+import { createMethod, TOptions, TMethod } from './create-method';
+import { addUrlParams } from './add-url-params';
+import { TJson } from './types';
 
-jest.mock('./decode-response-body');
-jest.mock('./encode-request-body');
+
+const decodeResponseBody = ImportMock.mockFunction(
+  decodeModule,
+  'decodeResponseBody',
+).callThrough();
+const encodeRequestBody = ImportMock.mockFunction(
+  encodeModule,
+  'encodeRequestBody',
+).callThrough();
+
 
 const mockData = {
   productTypes: [
@@ -25,20 +34,38 @@ const mockData = {
   ],
 };
 
-async function testSuccess(method, baseUrl, endpointUrl, body, options) {
+async function testSuccess(
+  method: TMethod,
+  baseUrl: string,
+  endpointUrl: string,
+  body?: any,
+  options?: TOptions,
+): Promise<TJson | Response> {
   mockOneJsonResponse(mockData);
   const responseBody = await method(endpointUrl, body, options);
   expect(responseBody).to.be.deep.equal(mockData);
-  expect(fetch.mock.calls[0][0]).to.be.equal(`${baseUrl}${endpointUrl}`);
+  expect(fetch.mock.calls[0][0]).to.contain(`${baseUrl}${endpointUrl}`);
   return responseBody;
 }
 
-async function testSuccessWithBody(method, baseUrl, endpointUrl, body, options) {
+async function testSuccessWithBody(
+  method: TMethod,
+  baseUrl: string,
+  endpointUrl: string,
+  body?: any,
+  options?: TOptions,
+): Promise<void> {
   await testSuccess(method, baseUrl, endpointUrl, body, options);
   expect(fetch.mock.calls[0][1].body).to.be.deep.equal(JSON.stringify(body));
 }
 
-async function testFail(method, baseUrl, endpointUrl, body, options) {
+async function testFail(
+  method: TMethod,
+  baseUrl: string,
+  endpointUrl: string,
+  body?: any,
+  options?: TOptions,
+): Promise<void> {
   mockOneJsonResponse({error: 'Oops'}, {status: 400});
 
   let error;
@@ -117,6 +144,25 @@ describe('services - http', () => {
           .to.include(encodeRequestBody.firstCall.returnValue.headers);
       });
 
+      it('does not override the other headers of the request with the ones provided by `encodeResponseBody`', async () => {
+        const body = {foo: 'bar'};
+        const options = {headers: {'Content-Type': 'application/octet-stream'}};
+        await testSuccessWithBody(method, baseUrl, endpointUrl, body, options);
+
+        expect(fetch.mock.calls[0][1].headers).to.include(options.headers);
+      });
+
+      it('adds the headers provided as a function', async () => {
+        const body = {foo: 'bar'};
+        const options = {
+          headers: {'content-type': () => 'application/testing'},
+        };
+
+        await testSuccessWithBody(method, baseUrl, endpointUrl, body, options);
+        expect(fetch.mock.calls[0][1].headers)
+          .to.include({'content-type': 'application/testing'});
+      });
+
       it('do not include credentials by default', async () => {
         await testSuccess(method, baseUrl, endpointUrl);
         expect(fetch.mock.calls[0][1].credentials).to.be.undefined;
@@ -144,35 +190,66 @@ describe('services - http', () => {
         expect(fetch.mock.calls[0][1].mode).to.be.equal('cors');
       });
 
+      it('uses the headers specified in the options', async () => {
+        const headers = {'Content-Type': 'application/octet-stream'};
+        await testSuccess(
+          method,
+          baseUrl,
+          endpointUrl,
+          null,
+          {headers},
+        );
+        expect(fetch.mock.calls[0][1].headers).to.include(headers);
+      });
+
+      it('adds parameters to url when provided', async () => {
+        const params = {partnerId: 'caseable'};
+        await testSuccess(
+          method,
+          baseUrl,
+          endpointUrl,
+          null,
+          {params},
+        );
+        const url = `${baseUrl}${endpointUrl}`;
+        expect(fetch.mock.calls[0][0]).to.be.equal(addUrlParams(url, params));
+      });
+
       describe('when createMethod was called with default options', () => {
-        let method;
+        const headers = {'Content-Type': 'application/octet-stream'};
 
         beforeEach(() => {
-          method = createMethod('PUT', baseUrl, {mode: 'cors', withCredentials: true});
+          method = createMethod(
+            'PUT',
+            baseUrl,
+            {mode: 'cors', withCredentials: true, headers},
+          );
         });
 
         it('uses default configuration', async () => {
           await testSuccess(method, baseUrl, endpointUrl);
           expect(fetch.mock.calls[0][1].credentials).to.be.equal('include');
           expect(fetch.mock.calls[0][1].mode).to.be.equal('cors');
+          expect(fetch.mock.calls[0][1].headers).to.include(headers);
         });
 
         it('options provided to the function take precedence over the default configurations', async () => {
+          const newHeaders = {Authorization: 'Basic 234567zHB==='};
+          const mode = 'navigate';
           await testSuccess(
             method,
             baseUrl,
             endpointUrl,
             null,
-            {mode: 'navigation', withCredentials: false},
+            {mode, withCredentials: false, headers: newHeaders},
           );
           expect(fetch.mock.calls[0][1].credentials).to.be.undefined;
-          expect(fetch.mock.calls[0][1].mode).to.be.equal('navigation');
+          expect(fetch.mock.calls[0][1].mode).to.be.equal(mode);
+          expect(fetch.mock.calls[0][1].headers).to.include(newHeaders);
         });
       });
 
       describe('when the function was created for the "HEAD" method', () => {
-        let method;
-
         beforeEach(() => {
           method = createMethod('HEAD', baseUrl);
         });

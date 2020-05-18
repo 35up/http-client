@@ -2,14 +2,12 @@ import { expect } from 'chai';
 import { decodeResponseBody } from './decode-response-body';
 
 describe('decodeResponseBody', () => {
-  const body = '<html lang="en">...</html>';
-  let response;
-
-  beforeEach(() => {
-    response = new Response(body, {headers: {'Content-Type': 'text/html'}});
-  });
-
   it('decodes the body as a string', async () => {
+    const body = '<html lang="en">...</html>';
+    const response = new Response(
+      body,
+      {headers: {'Content-Type': 'text/html'}},
+    );
     expect(await decodeResponseBody(response)).to.be.equal(body);
   });
 
