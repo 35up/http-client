@@ -3,7 +3,7 @@
   "version": "0.0.7",
   "main": "dist/http-client.umd.js",
   "module": "dist/http-client.esm.js",
-  "typings": "dist/types",
+  "types": "src",
   "scripts": {
     "build": "rollup --config",
     "lint": "eslint --ext .ts,.js .",
