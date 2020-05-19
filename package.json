@@ -1,6 +1,6 @@
 {
   "name": "@caseable/http-client",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "main": "dist/http-client.umd.js",
   "module": "dist/http-client.esm.js",
   "types": "src",
