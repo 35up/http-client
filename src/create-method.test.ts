@@ -7,7 +7,6 @@ import * as decodeModule from './decode-response-body';
 import * as encodeModule from './encode-request-body';
 import { createMethod, TOptions, TMethod } from './create-method';
 import { addUrlParams } from './add-url-params';
-import { TJson } from './types';
 
 
 const decodeResponseBody = ImportMock.mockFunction(
@@ -40,7 +39,7 @@ async function testSuccess(
   endpointUrl: string,
   body?: any,
   options?: TOptions,
-): Promise<TJson | Response> {
+): Promise<any> {
   mockOneJsonResponse(mockData);
   const responseBody = await method(endpointUrl, body, options);
   expect(responseBody).to.be.deep.equal(mockData);

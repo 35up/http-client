@@ -1,7 +1,7 @@
 import { encodeRequestBody } from './encode-request-body';
 import { decodeResponseBody } from './decode-response-body';
 import { addUrlParams } from './add-url-params';
-import { TSearchParams, THeaders, TJson } from './types';
+import { TSearchParams, THeaders } from './types';
 
 export type TRawHeaders = Record<string, string | (() => string)>;
 
@@ -17,8 +17,8 @@ export type THttpMethods = 'get' | 'GET'
   | 'unlink' | 'UNLINK';
 
 export type TMethod = (
-  (endpointUrl: string, body: any, options?: TOptions) =>
-    Promise<string | Response | TJson>
+  (endpointUrl: string, body?: any, options?: TOptions) =>
+    Promise<any>
 )
 
 export type TMethodError = Error & {
@@ -64,7 +64,7 @@ export const createMethod = (
     endpointUrl: string,
     body = null,
     options: TOptions = {},
-  ): Promise<string | Response | TJson> => {
+  ): Promise<any> => {
     const {
       withCredentials,
       mode,
