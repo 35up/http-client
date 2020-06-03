@@ -4,6 +4,7 @@ export { createMethod } from './create-method';
 export { encodeRequestBody } from './encode-request-body';
 export { decodeResponseBody } from './decode-response-body';
 export { addUrlParams } from './add-url-params';
+export { HttpError } from './http-error';
 
 export const get = createMethod('GET');
 export const post = createMethod('POST');
