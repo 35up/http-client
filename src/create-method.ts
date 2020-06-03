@@ -2,6 +2,7 @@ import { encodeRequestBody } from './encode-request-body';
 import { decodeResponseBody } from './decode-response-body';
 import { addUrlParams } from './add-url-params';
 import { TSearchParams, THeaders } from './types';
+import { HttpError } from './http-error';
 
 export type TRawHeaders = Record<string, string | (() => string)>;
 
@@ -21,25 +22,11 @@ export type TMethod = (
     Promise<any>
 )
 
-export type TMethodError = Error & {
-  data?: any;
-  response?: Response;
-}
-
 export type TOptions = {
   headers?: TRawHeaders;
   withCredentials?: boolean;
   mode?: RequestMode;
   params?: TSearchParams;
-}
-
-function generateError(data: any, response: Response): TMethodError {
-  const error: TMethodError = new Error(
-    (data && data.error) || `${response.status} ${response.statusText}`,
-  );
-  error.data = data;
-  error.response = response;
-  return error;
 }
 
 function parseHeaders(rawHeaders: TRawHeaders): THeaders {
@@ -102,7 +89,7 @@ export const createMethod = (
       : response;
 
     if (!response.ok) {
-      throw generateError(data, response);
+      throw new HttpError(data, response);
     }
 
     return data;
