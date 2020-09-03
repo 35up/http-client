@@ -5,7 +5,7 @@ An abstraction level over XHR requests (uses fetch).
 ## Requirements
 
 Http-client depends on the [Fetch API]. If you support older browsers which may
-not yet provide these natively (e.g. IE ), consider including a global polyfill
+not yet provide these natively (e.g. IE), consider including a global polyfill
 in your bundled application, such as [fetch].
 
 
