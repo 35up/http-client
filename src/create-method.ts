@@ -17,17 +17,17 @@ export type THttpMethods = 'get' | 'GET'
   | 'link' | 'LINK'
   | 'unlink' | 'UNLINK';
 
-export type TMethod = (
-  (endpointUrl: string, body?: any, options?: TOptions) =>
-    Promise<any>
-)
-
 export type TOptions = {
   headers?: TRawHeaders;
   withCredentials?: boolean;
   mode?: RequestMode;
   params?: TSearchParams;
 }
+
+export type TMethod = (
+  (endpointUrl: string, body?: any, options?: TOptions) =>
+    Promise<any>
+)
 
 function parseHeaders(rawHeaders: TRawHeaders): THeaders {
   const headersEntries = Object.entries(rawHeaders)

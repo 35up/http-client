@@ -4,7 +4,7 @@ const JSON_MIME_TYPES = [
 ];
 
 function isJSON(contentType: string): boolean {
-  return contentType && JSON_MIME_TYPES.some(
+  return JSON_MIME_TYPES.some(
     mime => contentType.startsWith(mime),
   );
 }
@@ -22,7 +22,7 @@ export async function decodeResponseBody(
 ): Promise<any> {
   const contentType = response.headers.get('Content-Type');
 
-  if (isJSON(contentType)) {
+  if (contentType && isJSON(contentType)) {
     return decodeJSON(response);
   }
 

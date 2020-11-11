@@ -12,11 +12,8 @@ describe('addUrlParams', () => {
   it('returns url when param is not an object', () => {
     const url = '/path';
 
-    // @ts-ignore
     expect(addUrlParams(url, 'string')).to.be.equal(url);
-    // @ts-ignore
     expect(addUrlParams(url, true)).to.be.equal(url);
-    // @ts-ignore
     expect(addUrlParams(url, 123)).to.be.equal(url);
   });
 

@@ -1,10 +1,15 @@
 import { TSearchParams } from './types';
 
+
+function isSearchParams(params: unknown): params is TSearchParams {
+  return params && typeof params === 'object';
+}
+
 export function addUrlParams(
   url: string,
-  params: TSearchParams = {},
+  params: TSearchParams | unknown = {},
 ): string {
-  if (!params || typeof params !== 'object') {
+  if (!isSearchParams(params)) {
     return url;
   }
 
