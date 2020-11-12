@@ -9,25 +9,23 @@ describe('addUrlParams', () => {
     expect(addUrlParams(url, {})).to.be.equal(url);
   });
 
-  it('returns url when param is not an object', () => {
+  it('returns url when param is not SearchParams', () => {
     const url = '/path';
 
-    // @ts-ignore
     expect(addUrlParams(url, 'string')).to.be.equal(url);
-    // @ts-ignore
     expect(addUrlParams(url, true)).to.be.equal(url);
-    // @ts-ignore
     expect(addUrlParams(url, 123)).to.be.equal(url);
+    expect(addUrlParams(url, {prop: {}})).to.be.equal(url);
   });
 
   it('returns url with query params', () => {
     const url = '/path';
     const params = {
       single: 'single',
-      multiple: ['multi1', 'multi2'],
+      multiple: ['multi1', 2],
     };
 
-    const expected = '/path?single=single&multiple=multi1%2Cmulti2';
+    const expected = '/path?single=single&multiple=multi1%2C2';
     expect(addUrlParams(url, params)).to.be.equal(expected);
   });
 

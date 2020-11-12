@@ -1,10 +1,36 @@
 import { TSearchParams } from './types';
 
+
+function isArrayOfStringsAndNumbers(
+  maybeStringsAndNumbers: unknown,
+): maybeStringsAndNumbers is (string | number)[] {
+  if (!Array.isArray(maybeStringsAndNumbers)) return false;
+
+  return !maybeStringsAndNumbers.some(maybeStringOrNumber => (
+    typeof maybeStringOrNumber !== 'string'
+    && typeof maybeStringOrNumber !== 'number'
+  ));
+}
+
+function isSearchParams(params: unknown): params is TSearchParams {
+  return params
+    && typeof params === 'object'
+    && !Array.isArray(params)
+    && !(
+      Object.values(params)
+        .some(value => (
+          typeof value !== 'string'
+          && typeof value !== 'number'
+          && !isArrayOfStringsAndNumbers(value)
+        ))
+    );
+}
+
 export function addUrlParams(
   url: string,
-  params: TSearchParams = {},
+  params: TSearchParams | unknown = {},
 ): string {
-  if (!params || typeof params !== 'object') {
+  if (!isSearchParams(params)) {
     return url;
   }
 
