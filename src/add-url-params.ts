@@ -1,8 +1,28 @@
 import { TSearchParams } from './types';
 
 
+function isArrayOfStringsAndNumbers(
+  maybeStringsAndNumbers: unknown,
+): maybeStringsAndNumbers is (string | number)[] {
+  if (!Array.isArray(maybeStringsAndNumbers)) return false;
+
+  return !maybeStringsAndNumbers.some(maybeStringOrNumber => (
+    typeof maybeStringOrNumber !== 'string'
+    && typeof maybeStringOrNumber !== 'number'
+  ));
+}
+
 function isSearchParams(params: unknown): params is TSearchParams {
-  return params && typeof params === 'object';
+  return params
+    && typeof params === 'object'
+    && !(
+      Object.values(params)
+        .some(value => (
+          typeof value !== 'string'
+          && typeof value !== 'number'
+          && !isArrayOfStringsAndNumbers(value)
+        ))
+    );
 }
 
 export function addUrlParams(
