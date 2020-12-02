@@ -13,11 +13,11 @@ function isArrayOfStringsAndNumbers(
 }
 
 function isSearchParams(params: unknown): params is TSearchParams {
-  return params
+  return !!params
     && typeof params === 'object'
     && !Array.isArray(params)
     && !(
-      Object.values(params)
+      Object.values(params || {})
         .some(value => (
           typeof value !== 'string'
           && typeof value !== 'number'
