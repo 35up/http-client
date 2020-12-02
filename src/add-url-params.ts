@@ -13,8 +13,8 @@ function isArrayOfStringsAndNumbers(
 }
 
 function isSearchParams(params: unknown): params is TSearchParams {
-  return params
-    && typeof params === 'object'
+  return typeof params === 'object'
+    && !!params
     && !Array.isArray(params)
     && !(
       Object.values(params)
