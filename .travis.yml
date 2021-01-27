@@ -20,6 +20,6 @@ script:
 notifications:
   slack:
     rooms:
-      - caseable-it:jwDzQUtpgjOcN0PP8QaUhKZp
+      - 35up:jwDzQUtpgjOcN0PP8QaUhKZp
     on_success: change
     on_failure: always

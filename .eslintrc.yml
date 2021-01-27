@@ -1,5 +1,5 @@
 extends:
-  - '@caseable/35up-base'
+  - '@35up/35up-base'
   - 'plugin:@typescript-eslint/eslint-recommended'
   - 'plugin:@typescript-eslint/recommended'
 parser: '@typescript-eslint/parser'

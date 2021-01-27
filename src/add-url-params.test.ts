@@ -30,14 +30,14 @@ describe('addUrlParams', () => {
   });
 
   it('adds the params correctly when the url has existing url params', () => {
-    const url = '/path?partner=caseable';
+    const url = '/path?partner=35up';
     const params = {
       single: 'single',
       multiple: ['multi1', 'multi2'],
     };
 
     expect(addUrlParams(url, params)).to.be.equal(
-      '/path?partner=caseable&single=single&multiple=multi1%2Cmulti2',
+      '/path?partner=35up&single=single&multiple=multi1%2Cmulti2',
     );
   });
 });

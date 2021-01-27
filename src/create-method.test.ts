@@ -202,7 +202,7 @@ describe('services - http', () => {
       });
 
       it('adds parameters to url when provided', async () => {
-        const params = {partnerId: 'caseable'};
+        const params = {partnerId: '35up'};
         await testSuccess(
           method,
           baseUrl,
