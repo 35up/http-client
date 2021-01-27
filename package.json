@@ -30,7 +30,7 @@
     "@babel/core": "^7.12.1",
     "@babel/preset-env": "^7.12.1",
     "@babel/preset-typescript": "^7.12.1",
-    "@35up/eslint-config-35up-base": "0.0.6",
+    "@35up/eslint-config-35up-base": "0.1.0",
     "@types/chai": "^4.2.0",
     "@types/jest": "^26.0.15",
     "@types/node-fetch": "^2.5.7",
