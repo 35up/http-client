@@ -17,7 +17,7 @@ export async function decodeResponseBody(
   const text = await response.text();
 
   if (contentType && isJSON(contentType)) {
-    return text ? JSON.parse(text) : {};
+    return text ? JSON.parse(text) : null;
   }
 
   return text;

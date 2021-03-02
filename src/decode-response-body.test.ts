@@ -22,12 +22,12 @@ describe('decodeResponseBody', () => {
     });
 
     describe('when body does not exist', () => {
-      it('returns an empty object', async () => {
+      it('returns null', async () => {
         const response = new Response(
           undefined,
           {headers: {'Content-Type': 'application/json'}},
         );
-        expect(await decodeResponseBody(response)).to.be.deep.equal({});
+        expect(await decodeResponseBody(response)).to.be.null;
       });
     });
   });
