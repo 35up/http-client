@@ -12,18 +12,23 @@ describe('decodeResponseBody', () => {
   });
 
   describe('when contentType is "application/json"', () => {
-    const body = {products: [{sku: 1}]};
-    let response;
-
-    beforeEach(() => {
-      response = new Response(
+    it('decodes the body as a JSON', async () => {
+      const body = {products: [{sku: 1}]};
+      const response = new Response(
         JSON.stringify(body),
         {headers: {'Content-Type': 'application/json'}},
       );
+      expect(await decodeResponseBody(response)).to.be.deep.equal(body);
     });
 
-    it('decodes the body as a JSON', async () => {
-      expect(await decodeResponseBody(response)).to.be.deep.equal(body);
+    describe('when body does not exist', () => {
+      it('returns an empty object', async () => {
+        const response = new Response(
+          undefined,
+          {headers: {'Content-Type': 'application/json'}},
+        );
+        expect(await decodeResponseBody(response)).to.be.deep.equal({});
+      });
     });
   });
 
