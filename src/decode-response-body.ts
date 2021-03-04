@@ -9,22 +9,16 @@ function isJSON(contentType: string): boolean {
   );
 }
 
-async function decodeJSON(response: Response): Promise<any> {
-  return response.json();
-}
-
-async function decodeText(response: Response): Promise<string> {
-  return response.text();
-}
-
 export async function decodeResponseBody(
   response: Response,
 ): Promise<any> {
   const contentType = response.headers.get('Content-Type');
 
+  const text = await response.text();
+
   if (contentType && isJSON(contentType)) {
-    return decodeJSON(response);
+    return text ? JSON.parse(text) : null;
   }
 
-  return decodeText(response);
+  return text;
 }
