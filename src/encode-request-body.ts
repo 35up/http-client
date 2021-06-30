@@ -5,7 +5,7 @@ export interface EncondedRequest<T = string> {
   body: T extends string ? string : FormData;
 }
 
-function encodeRequestBodyURL(body: URLSearchParams): EncondedRequest {
+function encodeRequestBodyUrl(body: URLSearchParams): EncondedRequest {
   return {
     body: body.toString(),
     headers: {'Content-Type': 'application/x-www-form-urlencoded'},
@@ -26,7 +26,7 @@ function encodeRequestBodyTextPlain(body: string): EncondedRequest {
   };
 }
 
-function encodeRequestBodyJSON(body: JSON): EncondedRequest {
+function encodeRequestBodyJson(body: JSON): EncondedRequest {
   return {
     body: JSON.stringify(body),
     headers: {'Content-Type': 'application/json'},
@@ -46,7 +46,7 @@ export function encodeRequestBody(
   body: any,
 ): EncondedRequest<string | FormData> {
   if (body instanceof URLSearchParams) {
-    return encodeRequestBodyURL(body);
+    return encodeRequestBodyUrl(body);
   }
   if (body instanceof FormData) {
     return encodeRequestBodyMultiPart(body);
@@ -54,5 +54,5 @@ export function encodeRequestBody(
   if (typeof body === 'string') {
     return encodeRequestBodyTextPlain(body);
   }
-  return encodeRequestBodyJSON(body);
+  return encodeRequestBodyJson(body);
 }

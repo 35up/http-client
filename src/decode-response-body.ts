@@ -3,7 +3,7 @@ const JSON_MIME_TYPES = [
   'text/x-json',
 ];
 
-function isJSON(contentType: string): boolean {
+function isJson(contentType: string): boolean {
   return JSON_MIME_TYPES.some(
     mime => contentType.startsWith(mime),
   );
@@ -16,7 +16,7 @@ export async function decodeResponseBody(
 
   const text = await response.text();
 
-  if (contentType && isJSON(contentType)) {
+  if (contentType && isJson(contentType)) {
     return text ? JSON.parse(text) : null;
   }
 
