@@ -8,6 +8,7 @@
     "build": "rollup --config",
     "lint": "eslint --ext .ts,.js .",
     "test": "jest --passWithNoTests",
+    "test:watch": "npm run test -- --watch",
     "test:ci": "npm test -- --ci --forceExit --runInBand",
     "test:coverage": "npm test -- --coverage",
     "prepublishOnly": "npm i && npm run build && npm run lint && npm run test",

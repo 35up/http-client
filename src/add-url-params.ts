@@ -1,29 +1,15 @@
 import { TSearchParams } from './types';
 
 
-function isArrayOfStringsAndNumbers(
-  maybeStringsAndNumbers: unknown,
-): maybeStringsAndNumbers is (string | number)[] {
-  if (!Array.isArray(maybeStringsAndNumbers)) return false;
-
-  return !maybeStringsAndNumbers.some(maybeStringOrNumber => (
-    typeof maybeStringOrNumber !== 'string'
-    && typeof maybeStringOrNumber !== 'number'
-  ));
-}
-
 function isSearchParams(params: unknown): params is TSearchParams {
   return typeof params === 'object'
     && !!params
-    && !Array.isArray(params)
-    && !(
-      Object.values(params)
-        .some(value => (
-          typeof value !== 'string'
-          && typeof value !== 'number'
-          && !isArrayOfStringsAndNumbers(value)
-        ))
-    );
+    && !Array.isArray(params);
+}
+
+function isValidParamValue(value: unknown): boolean {
+  return ['string', 'number', 'boolean'].includes(typeof value)
+    && !Number.isNaN(value);
 }
 
 export function addUrlParams(
@@ -38,7 +24,9 @@ export function addUrlParams(
   const query = new URLSearchParams(queryParams);
 
   Object.entries(params).forEach(([ key, value ]) => {
-    if (value) {
+    if (Array.isArray(value) && value.length) {
+      query.append(key, value.filter(isValidParamValue).toString());
+    } else if (isValidParamValue(value)) {
       query.append(key, value.toString());
     }
   });
