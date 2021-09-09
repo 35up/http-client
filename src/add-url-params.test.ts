@@ -57,6 +57,7 @@ describe('addUrlParams', () => {
       bosi: {m: 7},
       din: NaN,
       don: [],
+      emptyString: '',
       value: 'v',
     };
 
@@ -68,7 +69,7 @@ describe('addUrlParams', () => {
     const url = '/path';
     const params = {
       foo: 'bar',
-      goo: [1, true, false, null, {}, 0, 'buzz', NaN, undefined],
+      goo: [1, true, '', false, null, {}, 0, 'buzz', NaN, undefined],
     };
 
     const expected = '/path?foo=bar&goo=1%2Ctrue%2Cfalse%2C0%2Cbuzz';

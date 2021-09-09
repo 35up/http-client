@@ -9,7 +9,8 @@ function isSearchParams(params: unknown): params is TSearchParams {
 
 function isValidParamValue(value: unknown): boolean {
   return ['string', 'number', 'boolean'].includes(typeof value)
-    && !Number.isNaN(value);
+    && !Number.isNaN(value)
+    && value !== '';
 }
 
 export function addUrlParams(
