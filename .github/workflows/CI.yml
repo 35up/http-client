@@ -24,8 +24,14 @@ jobs:
           node-version: '14'
       - name: Configure GitHub NPM Token
         run: npm config set '//npm.pkg.github.com/:_authToken' "${{ secrets.NPM_TOKEN }}"
+      - name: NPM Install
+        run: npm i
+      - name: Build
+        run: npm run build
+      - name: Lint
+        run: npm run lint
       - name: Test
-        run: npm run ci
+        run: npm run test
       - uses: ./.github/actions/slack-notify
         if: failure()
         env:
