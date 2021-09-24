@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { HttpError } from './http-error';
 
+
 describe('http-error', () => {
   describe('toString', () => {
     it('to string returns error message', () => {
