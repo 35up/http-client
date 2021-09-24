@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  CI:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+        with:
+          repository: 35up/github-action-slack-notify
+          ref: v4
+          token: ${{ secrets.GH_ACCESS_TOKEN }}
+          path: .github/actions/slack-notify
+      - name: Setup NodeJS
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - name: Configure GitHub NPM Token
+        run: npm config set '//npm.pkg.github.com/:_authToken' "${{ secrets.NPM_TOKEN }}"
+      - name: Build
+        run: npm run build
+      - name: Lint
+        run: npm run lint
+      - name: Test
+        run: npm run test
+      - uses: ./.github/actions/slack-notify
+        if: failure()
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.ACTIONS_SLACK_BOT_ID }}
+        with:
+          channel-id: C963N8H3J
+          job-status: ${{ job.status }}
