@@ -8,7 +8,12 @@ function getMessage(data: any): string {
 }
 
 export class HttpError extends Error {
+  readonly responseStatus: number;
+  readonly responseStatusText: string;
+
   constructor(public data: any, public response: Response) {
     super(getMessage(data) || `${response.status} ${response.statusText}`);
+    this.responseStatus = response.status;
+    this.responseStatusText = response.statusText;
   }
 }

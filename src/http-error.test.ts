@@ -29,4 +29,14 @@ describe('http-error', () => {
       });
     });
   });
+
+  it('has responseStatus and responseStatusText', () => {
+    const err = new HttpError(
+      null,
+      new Response(null, {status: 500, statusText: 'server is tired'}),
+    );
+
+    expect(err.responseStatus).to.equal(500);
+    expect(err.responseStatusText).to.equal('server is tired');
+  });
 });
