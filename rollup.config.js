@@ -1,8 +1,8 @@
 import typescript from 'rollup-plugin-typescript2';
-// eslint-disable-next-line import/extensions
-import pkg from './package.json';
 
 
+const dir = 'dist';
+const baseName = 'http-client';
 const plugins = [
   typescript({ useTsconfigDeclarationDir: true }),
 ];
@@ -12,13 +12,11 @@ export default [
     input: './src/index.ts',
     output: [
       {
-        file: pkg.browser,
-        name: 'HttpClient',
-        format: 'umd',
-        exports: 'named',
+        file: `${dir}/${baseName}.cjs.js`,
+        format: 'cjs',
       },
       {
-        file: pkg.module,
+        file: `${dir}/${baseName}.esm.js`,
         format: 'esm',
       },
     ],
@@ -26,12 +24,16 @@ export default [
   },
   {
     input: './src/index.node.ts',
-    output: {
-      file: pkg.main,
-      name: 'HttpClient',
-      format: 'umd',
-      exports: 'named',
-    },
+    output: [
+      {
+        file: `${dir}/${baseName}.node.cjs.js`,
+        format: 'cjs',
+      },
+      {
+        file: `${dir}/${baseName}.node.esm.js`,
+        format: 'esm',
+      },
+    ],
     plugins,
   },
 ];
