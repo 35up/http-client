@@ -1,22 +1,46 @@
 import typescript from 'rollup-plugin-typescript2';
-// eslint-disable-next-line import/extensions
-import pkg from './package.json';
 
-export default {
-  input: './src/index.ts',
-  output: [
-    {
-      file: pkg.main,
-      name: 'HttpClient',
-      format: 'umd',
-      exports: 'named',
-    },
-    {
-      file: pkg.module,
-      format: 'esm',
-    },
-  ],
-  plugins: [
-    typescript({ useTsconfigDeclarationDir: true }),
-  ],
-};
+
+const dir = 'dist';
+const baseName = 'http-client';
+const plugins = [
+  typescript({ useTsconfigDeclarationDir: true }),
+];
+
+export default [
+  {
+    input: './src/index.ts',
+    output: [
+      {
+        file: `${dir}/${baseName}.cjs`,
+        format: 'cjs',
+      },
+      {
+        file: `${dir}/${baseName}.js`,
+        format: 'esm',
+      },
+    ],
+    plugins,
+  },
+  {
+    input: './src/index.node.ts',
+    output: [
+      {
+        file: `${dir}/${baseName}.node.cjs`,
+        format: 'cjs',
+        paths: {
+          'node-fetch': 'node-fetch/lib/index.js',
+        },
+      },
+      {
+        file: `${dir}/${baseName}.node.js`,
+        format: 'esm',
+        paths: {
+          'node-fetch': 'node-fetch/lib/index.mjs',
+        },
+      },
+    ],
+    external: ['node-fetch'],
+    plugins,
+  },
+];

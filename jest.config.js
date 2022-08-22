@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   setupFilesAfterEnv: [
     './src/setup-tests.ts',
   ],
