@@ -16,7 +16,7 @@ export default [
         format: 'cjs',
       },
       {
-        file: `${dir}/${baseName}.mjs`,
+        file: `${dir}/${baseName}.js`,
         format: 'esm',
       },
     ],
@@ -34,10 +34,10 @@ export default [
         inlineDynamicImports: true,
       },
       {
-        file: `${dir}/${baseName}.node.mjs`,
+        file: `${dir}/${baseName}.node.js`,
         format: 'esm',
         paths: {
-          'node-fetch': 'node-fetch/lib/index.mjs',
+          'node-fetch': 'node-fetch/lib/index.js',
         },
         inlineDynamicImports: true,
       },
