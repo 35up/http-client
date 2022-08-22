@@ -12,11 +12,11 @@ export default [
     input: './src/index.ts',
     output: [
       {
-        file: `${dir}/${baseName}.cjs.js`,
+        file: `${dir}/${baseName}.cjs`,
         format: 'cjs',
       },
       {
-        file: `${dir}/${baseName}.esm.js`,
+        file: `${dir}/${baseName}.mjs`,
         format: 'esm',
       },
     ],
@@ -26,14 +26,23 @@ export default [
     input: './src/index.node.ts',
     output: [
       {
-        file: `${dir}/${baseName}.node.cjs.js`,
+        file: `${dir}/${baseName}.node.cjs`,
         format: 'cjs',
+        paths: {
+          'node-fetch': 'node-fetch/lib/index.js',
+        },
+        inlineDynamicImports: true,
       },
       {
-        file: `${dir}/${baseName}.node.esm.js`,
+        file: `${dir}/${baseName}.node.mjs`,
         format: 'esm',
+        paths: {
+          'node-fetch': 'node-fetch/lib/index.mjs',
+        },
+        inlineDynamicImports: true,
       },
     ],
+    external: ['node-fetch'],
     plugins,
   },
 ];
