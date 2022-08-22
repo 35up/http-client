@@ -31,15 +31,13 @@ export default [
         paths: {
           'node-fetch': 'node-fetch/lib/index.js',
         },
-        inlineDynamicImports: true,
       },
       {
         file: `${dir}/${baseName}.node.js`,
         format: 'esm',
         paths: {
-          'node-fetch': 'node-fetch/lib/index.js',
+          'node-fetch': 'node-fetch/lib/index.mjs',
         },
-        inlineDynamicImports: true,
       },
     ],
     external: ['node-fetch'],
