@@ -1,10 +1,11 @@
-import typescript from 'rollup-plugin-typescript2';
+import typescript from '@rollup/plugin-typescript';
+import dts from 'rollup-plugin-dts';
 
 
 const dir = 'dist';
 const baseName = 'http-client';
 const plugins = [
-  typescript({ useTsconfigDeclarationDir: true }),
+  typescript(),
 ];
 
 export default [
@@ -42,5 +43,29 @@ export default [
     ],
     external: ['node-fetch'],
     plugins,
+  },
+  {
+    input: `${dir}/index.d.ts`,
+    output: [
+      {file: `${dir}/${baseName}.d.ts`, format: 'esm'},
+      {file: `${dir}/${baseName}.cjs.d.ts`, format: 'commonjs'},
+    ],
+    plugins: [dts({
+      compilerOptions: {
+        baseUrl: '.',
+      },
+    })],
+  },
+  {
+    input: `${dir}/index.node.d.ts`,
+    output: [
+      {file: `${dir}/${baseName}.node.d.ts`, format: 'esm'},
+      {file: `${dir}/${baseName}.node.cjs.d.ts`, format: 'commonjs'},
+    ],
+    plugins: [dts({
+      compilerOptions: {
+        baseUrl: '.',
+      },
+    })],
   },
 ];

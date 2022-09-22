@@ -48,7 +48,7 @@ export function encodeRequestBody(
   if (body instanceof URLSearchParams) {
     return encodeRequestBodyUrl(body);
   }
-  if (body instanceof FormData) {
+  if (typeof FormData !== 'undefined' && body instanceof FormData) {
     return encodeRequestBodyMultiPart(body);
   }
   if (typeof body === 'string') {
