@@ -13,6 +13,9 @@
   },
   "exclude": [
     "node_modules",
-    "dist"
+    "dist",
+    "src/test",
+    "**/*.test.ts",
+    "src/setup-tests.ts"
   ]
 }
