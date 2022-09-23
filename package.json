@@ -1,6 +1,6 @@
 {
   "name": "@35up/http-client",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "main": "dist/http-client.node.cjs",
   "module": "dist/http-client.js",
   "type": "module",
