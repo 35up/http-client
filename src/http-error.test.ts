@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { HttpError } from './http-error';
+import { HttpError, isHttpError } from './http-error';
 
 
 describe('http-error', () => {
@@ -38,5 +38,15 @@ describe('http-error', () => {
 
     expect(err.responseStatus).to.equal(500);
     expect(err.responseStatusText).to.equal('server is tired');
+  });
+
+  describe('isHttpError', () => {
+    it('returns true when input is HttpError', () => {
+      expect(isHttpError(new HttpError(null, new Response()))).to.be.true;
+    });
+
+    it('returns false when input is not HttpError', () => {
+      expect(isHttpError(new Error('not an http error'))).to.be.false;
+    });
   });
 });
