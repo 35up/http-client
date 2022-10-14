@@ -17,3 +17,7 @@ export class HttpError extends Error {
     this.responseStatusText = response.statusText;
   }
 }
+
+export function isHttpError(error: Error): error is HttpError {
+  return 'response' in error;
+}
