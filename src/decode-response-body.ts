@@ -9,9 +9,9 @@ function isJson(contentType: string): boolean {
   );
 }
 
-export async function decodeResponseBody(
+export async function decodeResponseBody<T>(
   response: Response,
-): Promise<any> {
+): Promise<T | string> {
   const contentType = response.headers.get('Content-Type');
 
   const text = await response.text();

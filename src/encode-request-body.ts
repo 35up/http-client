@@ -26,7 +26,7 @@ function encodeRequestBodyTextPlain(body: string): EncondedRequest {
   };
 }
 
-function encodeRequestBodyJson(body: JSON): EncondedRequest {
+function encodeRequestBodyJson(body: unknown): EncondedRequest {
   return {
     body: JSON.stringify(body),
     headers: {'Content-Type': 'application/json'},
@@ -42,8 +42,11 @@ export function encodeRequestBody<T extends FormData>(
 export function encodeRequestBody<T>(
   body: T,
 ): EncondedRequest<string>;
+export function encodeRequestBody<T extends string>(
+  body: T,
+): EncondedRequest<string>;
 export function encodeRequestBody(
-  body: any,
+  body: unknown,
 ): EncondedRequest<string | FormData> {
   if (body instanceof URLSearchParams) {
     return encodeRequestBodyUrl(body);
@@ -54,5 +57,6 @@ export function encodeRequestBody(
   if (typeof body === 'string') {
     return encodeRequestBodyTextPlain(body);
   }
+
   return encodeRequestBodyJson(body);
 }

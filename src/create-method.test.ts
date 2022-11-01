@@ -33,25 +33,29 @@ const mockData = {
   ],
 };
 
-async function testSuccess(
+async function testSuccess<TBody, TResponse>(
   method: TMethod,
   baseUrl: string,
   endpointUrl: string,
-  body?: any,
+  body?: TBody,
   options?: TOptions,
-): Promise<any> {
+): Promise<TResponse | string> {
   mockOneJsonResponse(mockData);
-  const responseBody = await method(endpointUrl, body, options);
+  const responseBody = await method<TBody, TResponse>(
+    endpointUrl,
+    body,
+    options,
+  );
   expect(responseBody).to.be.deep.equal(mockData);
   expect(fetch.mock.calls[0][0]).to.contain(`${baseUrl}${endpointUrl}`);
   return responseBody;
 }
 
-async function testSuccessWithBody(
+async function testSuccessWithBody<TBody>(
   method: TMethod,
   baseUrl: string,
   endpointUrl: string,
-  body?: any,
+  body?: TBody,
   options?: TOptions,
 ): Promise<void> {
   await testSuccess(method, baseUrl, endpointUrl, body, options);
@@ -62,7 +66,7 @@ async function testFail(
   method: TMethod,
   baseUrl: string,
   endpointUrl: string,
-  body?: any,
+  body?: unknown,
   options?: TOptions,
 ): Promise<void> {
   mockOneJsonResponse({error: 'Oops'}, {status: 400});
@@ -248,9 +252,9 @@ describe('services - http', () => {
         });
       });
 
-      describe('when the function was created for the "HEAD" method', () => {
+      describe.each(['HEAD', 'head'] as const)('when the function was created for the %p method', (httpMethod) => {
         beforeEach(() => {
-          method = createMethod('HEAD', baseUrl);
+          method = createMethod(httpMethod, baseUrl);
         });
 
         it('do not parse the response body', async () => {

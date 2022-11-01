@@ -24,10 +24,18 @@ export type TOptions = {
   params?: TSearchParams;
 }
 
-export type TMethod = (
-  (endpointUrl: string, body?: any, options?: TOptions) =>
-    Promise<any>
-)
+export type THeadMethod = <TRequest>(
+  endpointUrl: string,
+  body?: TRequest,
+  options?: TOptions,
+) => Promise<Response>;
+
+export type TMethod = <TRequest, TResponse = unknown>(
+  endpointUrl: string,
+  body?: TRequest,
+  options?: TOptions,
+) => Promise<TResponse | string>;
+
 
 function parseHeaders(rawHeaders: TRawHeaders): THeaders {
   const headersEntries = Object.entries(rawHeaders)
@@ -42,21 +50,33 @@ function parseHeaders(rawHeaders: TRawHeaders): THeaders {
   }), {});
 }
 
-export const createMethod = (
+export function createMethod(
+  method: 'HEAD' | 'head',
+  baseUrl?: string,
+  defaultOptions?: TOptions,
+): THeadMethod;
+export function createMethod(
+  method: Exclude<THttpMethods, 'HEAD' | 'head'>,
+  baseUrl?: string,
+  defaultOptions?: TOptions,
+): TMethod;
+export function createMethod(
   method: THttpMethods,
   baseUrl = '',
   defaultOptions: TOptions = {},
-): TMethod => (
-  async (
+): TMethod | THeadMethod {
+  return async (
     endpointUrl: string,
-    body = null,
+    body = undefined,
     options: TOptions = {},
+    // this any makes it so no mayor code changes have to be done to support
+    // the type changes
   ): Promise<any> => {
     const {
       withCredentials,
       mode,
       params: urlParams,
-    } = { ...defaultOptions, ...options };
+    } = {...defaultOptions, ...options};
 
     let urlEncoded = `${baseUrl}${endpointUrl}`;
     urlEncoded = addUrlParams(urlEncoded, urlParams);
@@ -84,7 +104,7 @@ export const createMethod = (
 
     const response = await fetch(urlEncoded, params);
 
-    const data = method !== 'HEAD'
+    const data = method !== 'HEAD' && method !== 'head'
       ? await decodeResponseBody(response)
       : response;
 
@@ -93,5 +113,5 @@ export const createMethod = (
     }
 
     return data;
-  }
-);
+  };
+}
