@@ -42,9 +42,6 @@ export function encodeRequestBody<T extends FormData>(
 export function encodeRequestBody<T>(
   body: T,
 ): EncondedRequest<string>;
-export function encodeRequestBody<T extends string>(
-  body: T,
-): EncondedRequest<string>;
 export function encodeRequestBody(
   body: unknown,
 ): EncondedRequest<string | FormData> {
