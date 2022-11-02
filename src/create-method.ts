@@ -69,7 +69,7 @@ export function createMethod(
     endpointUrl: string,
     body = undefined,
     options: TOptions = {},
-    // this any makes it so no mayor code changes have to be done to support
+    // this any makes it so no major code changes have to be done to support
     // the type changes
   ): Promise<any> => {
     const {
@@ -104,9 +104,9 @@ export function createMethod(
 
     const response = await fetch(urlEncoded, params);
 
-    const data = method !== 'HEAD' && method !== 'head'
-      ? await decodeResponseBody(response)
-      : response;
+    const data = ['HEAD', 'head'].includes(method)
+      ? response
+      : await decodeResponseBody(response);
 
     if (!response.ok) {
       throw new HttpError(data, response);
