@@ -71,6 +71,7 @@ export function createMethod(
     options: TOptions = {},
     // this any makes it so no major code changes have to be done to support
     // the type changes
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): Promise<any> => {
     const {
       withCredentials,
