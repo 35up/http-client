@@ -34,7 +34,7 @@ export type TMethod = <TRequest, TResponse = unknown>(
   endpointUrl: string,
   body?: TRequest,
   options?: TOptions,
-) => Promise<TResponse | string>;
+) => Promise<TResponse>;
 
 
 function parseHeaders(rawHeaders: TRawHeaders): THeaders {
