@@ -10,11 +10,15 @@ function getMessage(data: unknown): string {
 export class HttpError<TData = unknown> extends Error {
   readonly responseStatus: number;
   readonly responseStatusText: string;
+  readonly data: TData;
 
-  constructor(public data: TData, public response: Response) {
-    super(getMessage(data) || `${response.status} ${response.statusText}`);
+  constructor(public responseData: TData, public response: Response) {
+    super(
+      getMessage(responseData) || `${response.status} ${response.statusText}`,
+    );
     this.responseStatus = response.status;
     this.responseStatusText = response.statusText;
+    this.data = responseData;
   }
 }
 

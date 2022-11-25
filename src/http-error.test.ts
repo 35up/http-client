@@ -40,6 +40,16 @@ describe('http-error', () => {
     expect(err.responseStatusText).to.equal('server is tired');
   });
 
+  it('has data', () => {
+    const dataObj = {error: 'could not process the request'};
+    const err = new HttpError(
+      dataObj,
+      new Response(null, {status: 400, statusText: 'bad request'}),
+    );
+
+    expect(err.data).to.equal(dataObj);
+  });
+
   describe('isHttpError', () => {
     it('returns true when input is HttpError', () => {
       expect(isHttpError(new HttpError(null, new Response()))).to.be.true;
