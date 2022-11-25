@@ -28,6 +28,14 @@ describe('http-error', () => {
         expect(err.toString()).to.equal('Error: sorry');
       });
     });
+
+    describe('when data is string', () => {
+      it('includes it in the message directly', () => {
+        const err = new HttpError('Unauthorized', new Response());
+
+        expect(err.toString()).to.equal('Error: Unauthorized');
+      });
+    });
   });
 
   it('has responseStatus and responseStatusText', () => {
