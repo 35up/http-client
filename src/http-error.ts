@@ -1,5 +1,8 @@
 function getMessage(data: unknown): string {
-  const error = data && 'error' in data && data.error;
+  if (typeof data === 'string') {
+    return data;
+  }
+  const error = data && typeof data === 'object' && data.error;
   if (error && typeof error === 'object') {
     return error.message;
   }
