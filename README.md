@@ -1,20 +1,17 @@
 # http-client
 
-An library providing apis for http requests. It is basically a wrapper over 
-XHR requests (uses fetch).
-
-
-## Purpose
-
-Provides an easy way to make http requests and handle the responses, eliminates
-boilerplate code.
+Provides convenient apis to make http requests and handle the responses, 
+eliminates boilerplate code. It is basically a wrapper over XHR requests 
+(uses fetch).
 
 ## APIs
-The main API of the library is `createMethod`. This creates a ready to use function with some settings
-already embedded into it. 
+The main API of the library is `createMethod`. This creates a ready to use 
+function with some settings already embedded into it. 
+
 ```
 createMethod(method, baseUrl, defaultOptions)
 ```
+
 Params:
 
 | Parameter      | Description                                                                                                            | Type   | Optional |
@@ -46,7 +43,7 @@ Parameters:
 | options     | Request options. See details above. This will be merged with defaultOptions specified at `createMethod` | Object | Yes      |
 
 
-Example:
+### Example
 ```  
   import { createMethod } from '@35up/http-client';
   
@@ -105,6 +102,8 @@ The available functions are:
 `get`, `post`, `put`, `patch`, `deleteMethod`, `head`;
 
 ## Requirements
+
+The library supports both browser and node environments.
 
 Http-client depends on the [Fetch API]. If you support older browsers which may
 not yet provide these natively (e.g. IE), consider including a global polyfill
