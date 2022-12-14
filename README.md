@@ -1,6 +1,67 @@
 # http-client
 
-An abstraction level over XHR requests (uses fetch).
+An library providing apis for http requests. It is basically a wrapper over 
+XHR requests (uses fetch).
+
+
+## Purpose
+
+Provides an easy way to make http requests and handle the responses, eliminates
+boilerplate code.
+
+## APIs
+
+1. `createMethod`. This creates a ready to use function with some settings
+already embedded into it. 
+```
+createMethod(method, baseUrl, defaultOptions)
+```
+Params:
+
+| Parameter      | Description                                                                                                            | Type   | Optional |
+|----------------|------------------------------------------------------------------------------------------------------------------------|--------|----------|
+| method         | HTTP method: GET, POST, PUT, etc.                                                                                      | String | No       |
+| baseUrl        | Base url of the request path (will be prefixed the final url). When not specified <br/> relative path will be used (/) | String | Yes      |
+| defaultOptions | Request options that will be used by default. See details below                                                        | Object | Yes      |
+
+Options:
+
+| Parameter       | Description                                                                             | Type    | Optional |
+|-----------------|-----------------------------------------------------------------------------------------|---------|----------|
+| headers         | extra headers you would like to pass                                                    | Object  | Yes      |
+| withCredentials | Flag whether to include cookies in the request (defaults to false)                      | Boolean | Yes      |
+| mode            | Request mode                                                                            | String  | Yes      |
+| params          | Search params object. Will be trasnformed to query string and <br/>appended to the request url | Object  | Yes      |
+
+`createMethod` returns a function with the following signature:
+```
+method(endpointUrl, body, options)
+```
+
+Parameters:
+
+| Parameter   | Description                                           | Type   | Optional |
+|-------------|-------------------------------------------------------|--------|----------|
+| endpointUrl | the request endpoint. Will be appended to the baseUrl | String | No       |
+| body        | Request body                                          | Object | Yes      |
+| options     | Request options. See details above                    | Object | Yes      |
+
+
+Example:
+```  
+  const put = createMethod(
+    'PUT',
+    'https://my-website/apis/v1',
+    {
+      withCredentials: true, 
+      headers: {'Content-Type': 'application/octet-stream'},
+    },
+   );
+   
+  // And then just use it to make an http request
+  const result = await put('/order', {sku: '12345'}, {mode: 'cors'});
+```
+The returned value is a promise with decoded response body.
 
 ## Requirements
 
