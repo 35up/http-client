@@ -10,8 +10,7 @@ Provides an easy way to make http requests and handle the responses, eliminates
 boilerplate code.
 
 ## APIs
-
-1. `createMethod`. This creates a ready to use function with some settings
+The main API of the library is `createMethod`. This creates a ready to use function with some settings
 already embedded into it. 
 ```
 createMethod(method, baseUrl, defaultOptions)
@@ -62,6 +61,32 @@ Example:
   const result = await put('/order', {sku: '12345'}, {mode: 'cors'});
 ```
 The returned value is a promise with decoded response body.
+
+In case response fails method throws an exception of type `HttpError`
+
+`HttpError` inherits from `Error` class has following extra properties:
+
+| Property           | Description                                     | Type   |
+|--------------------|-------------------------------------------------|--------|
+| responseStatus     | status code (404, 500, etc.)                    | Number |
+| responseStatusText | status text (i.e. internal server error)        | String |
+| data               | Reponse data. This may contain arbitrary object | Object |
+
+
+#### Checking if thrown exception is of type HttpError
+
+This is possible with `isHttpError` utility:
+```
+  try {
+    ...
+    await method(...);
+  } catch(e) {
+    if (isHttpError(e)) {
+      // ... An http error happened. handle it here
+    }
+    // Some other issue occured, deal with it in other way
+  }
+```
 
 ## Requirements
 
