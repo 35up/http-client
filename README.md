@@ -19,17 +19,17 @@ Params:
 
 | Parameter      | Description                                                                                                            | Type   | Optional |
 |----------------|------------------------------------------------------------------------------------------------------------------------|--------|----------|
-| method         | HTTP method: GET, POST, PUT, etc.                                                                                      | String | No       |
-| baseUrl        | Base url of the request path (will be prefixed the final url). When not specified <br/> relative path will be used (/) | String | Yes      |
+| method         | HTTP method: `GET`, `POST`, `PU`T, etc.                                                                                | String | No       |
+| baseUrl        | Base url of the request path (will be prefixed the final url). When not specified <br/> relative path will be used `/` | String | Yes      |
 | defaultOptions | Request options that will be used by default. See details below                                                        | Object | Yes      |
 
 Options:
 
-| Parameter       | Description                                                                             | Type    | Optional |
-|-----------------|-----------------------------------------------------------------------------------------|---------|----------|
-| headers         | extra headers you would like to pass                                                    | Object  | Yes      |
-| withCredentials | Flag whether to include cookies in the request (defaults to false)                      | Boolean | Yes      |
-| mode            | Request mode                                                                            | String  | Yes      |
+| Parameter       | Description                                                                                    | Type    | Optional |
+|-----------------|------------------------------------------------------------------------------------------------|---------|----------|
+| headers         | extra headers you would like to pass                                                           | Object  | Yes      |
+| withCredentials | Flag whether to include cookies in the request (defaults to `false`)                           | Boolean | Yes      |
+| mode            | Request mode                                                                                   | String  | Yes      |
 | params          | Search params object. Will be trasnformed to query string and <br/>appended to the request url | Object  | Yes      |
 
 `createMethod` returns a function with the following signature:
@@ -39,15 +39,17 @@ method(endpointUrl, body, options)
 
 Parameters:
 
-| Parameter   | Description                                           | Type   | Optional |
-|-------------|-------------------------------------------------------|--------|----------|
-| endpointUrl | the request endpoint. Will be appended to the baseUrl | String | No       |
-| body        | Request body                                          | Object | Yes      |
-| options     | Request options. See details above                    | Object | Yes      |
+| Parameter   | Description                                                                                             | Type   | Optional |
+|-------------|---------------------------------------------------------------------------------------------------------|--------|----------|
+| endpointUrl | the request endpoint. Will be appended to the baseUrl                                                   | String | No       |
+| body        | Request body                                                                                            | Object | Yes      |
+| options     | Request options. See details above. This will be merged with defaultOptions specified at `createMethod` | Object | Yes      |
 
 
 Example:
 ```  
+  import { createMethod } from '@35up/http-client';
+  
   const put = createMethod(
     'PUT',
     'https://my-website/apis/v1',
@@ -62,7 +64,7 @@ Example:
 ```
 The returned value is a promise with decoded response body.
 
-In case response fails method throws an exception of type `HttpError`
+In case response fails, method throws an exception of type `HttpError`
 
 `HttpError` inherits from `Error` class has following extra properties:
 
@@ -73,7 +75,7 @@ In case response fails method throws an exception of type `HttpError`
 | data               | Reponse data. This may contain arbitrary object | Object |
 
 
-#### Checking if thrown exception is of type HttpError
+### Checking if thrown exception is of type HttpError
 
 This is possible with `isHttpError` utility:
 ```
@@ -87,6 +89,20 @@ This is possible with `isHttpError` utility:
     // Some other issue occured, deal with it in other way
   }
 ```
+
+### Shortcuts 
+
+The library also exposes ready to use methods that do not have a base url so 
+you could bypass calling `createMethod` in case your api base url is the same 
+as your website (using relative path):
+```
+  import { get } from '@35up/http-client';
+  
+  const result = await get('/api/v1/orders');
+```
+
+The available functions are: 
+`get`, `post`, `put`, `patch`, `deleteMethod`, `head`;
 
 ## Requirements
 
