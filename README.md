@@ -14,20 +14,20 @@ createMethod(method, baseUrl, defaultOptions)
 
 Params:
 
-| Parameter      | Description                                                                                                             | Type   | Optional |
+| Parameter      | Description                                                                                                             | Type   | Required |
 |----------------|-------------------------------------------------------------------------------------------------------------------------|--------|----------|
-| method         | HTTP method: `GET`, `POST`, `PUT`, etc.                                                                                 | String | No       |
-| baseUrl        | Base url of the request path (will be prefixed the final url). When not specified <br/> relative path will be used `/`  | String | Yes      |
-| defaultOptions | Request options that will be used by default. See details below                                                         | Object | Yes      |
+| method         | HTTP method: `GET`, `POST`, `PUT`, etc.                                                                                 | String | Yes      |
+| baseUrl        | Base url of the request path (will be prefixed the final url). When not specified <br/> relative path will be used `/`  | String | No       |
+| defaultOptions | Request options that will be used by default. See details below                                                         | Object | No       |
 
 Options:
 
-| Parameter       | Description                                                                                    | Type    | Optional |
+| Parameter       | Description                                                                                    | Type    | Required |
 |-----------------|------------------------------------------------------------------------------------------------|---------|----------|
-| headers         | Extra headers you would like to pass                                                           | Object  | Yes      |
-| withCredentials | Flag whether to include cookies in the request (defaults to `false`)                           | Boolean | Yes      |
-| mode            | Request mode                                                                                   | String  | Yes      |
-| params          | Search params object. Will be trasnformed to query string and <br/>appended to the request url | Object  | Yes      |
+| headers         | Extra headers you would like to pass                                                           | Object  | No       |
+| withCredentials | Flag whether to include cookies in the request (defaults to `false`)                           | Boolean | No       |
+| mode            | Request mode                                                                                   | String  | No       |
+| params          | Search params object. Will be trasnformed to query string and <br/>appended to the request url | Object  | No       |
 
 `createMethod` returns a function with the following signature:
 ```
@@ -36,11 +36,11 @@ method(endpointUrl, body, options)
 
 Parameters:
 
-| Parameter   | Description                                                                                             | Type   | Optional |
+| Parameter   | Description                                                                                             | Type   | Required |
 |-------------|---------------------------------------------------------------------------------------------------------|--------|----------|
-| endpointUrl | The request endpoint. Will be appended to the baseUrl                                                   | String | No       |
-| body        | Request body                                                                                            | Object | Yes      |
-| options     | Request options. See details above. This will be merged with defaultOptions specified at `createMethod` | Object | Yes      |
+| endpointUrl | The request endpoint. Will be appended to the baseUrl                                                   | String | Yes      |
+| body        | Request body                                                                                            | Object | No       |
+| options     | Request options. See details above. This will be merged with defaultOptions specified at `createMethod` | Object | No       |
 
 
 ### Example
