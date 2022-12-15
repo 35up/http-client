@@ -14,17 +14,17 @@ createMethod(method, baseUrl, defaultOptions)
 
 Params:
 
-| Parameter      | Description                                                                                                            | Type   | Optional |
-|----------------|------------------------------------------------------------------------------------------------------------------------|--------|----------|
-| method         | HTTP method: `GET`, `POST`, `PU`T, etc.                                                                                | String | No       |
-| baseUrl        | Base url of the request path (will be prefixed the final url). When not specified <br/> relative path will be used `/` | String | Yes      |
-| defaultOptions | Request options that will be used by default. See details below                                                        | Object | Yes      |
+| Parameter      | Description                                                                                                             | Type   | Optional |
+|----------------|-------------------------------------------------------------------------------------------------------------------------|--------|----------|
+| method         | HTTP method: `GET`, `POST`, `PUT`, etc.                                                                                 | String | No       |
+| baseUrl        | Base url of the request path (will be prefixed the final url). When not specified <br/> relative path will be used `/`  | String | Yes      |
+| defaultOptions | Request options that will be used by default. See details below                                                         | Object | Yes      |
 
 Options:
 
 | Parameter       | Description                                                                                    | Type    | Optional |
 |-----------------|------------------------------------------------------------------------------------------------|---------|----------|
-| headers         | extra headers you would like to pass                                                           | Object  | Yes      |
+| headers         | Extra headers you would like to pass                                                           | Object  | Yes      |
 | withCredentials | Flag whether to include cookies in the request (defaults to `false`)                           | Boolean | Yes      |
 | mode            | Request mode                                                                                   | String  | Yes      |
 | params          | Search params object. Will be trasnformed to query string and <br/>appended to the request url | Object  | Yes      |
@@ -38,7 +38,7 @@ Parameters:
 
 | Parameter   | Description                                                                                             | Type   | Optional |
 |-------------|---------------------------------------------------------------------------------------------------------|--------|----------|
-| endpointUrl | the request endpoint. Will be appended to the baseUrl                                                   | String | No       |
+| endpointUrl | The request endpoint. Will be appended to the baseUrl                                                   | String | No       |
 | body        | Request body                                                                                            | Object | Yes      |
 | options     | Request options. See details above. This will be merged with defaultOptions specified at `createMethod` | Object | Yes      |
 
@@ -63,12 +63,12 @@ The returned value is a promise with decoded response body.
 
 In case response fails, method throws an exception of type `HttpError`
 
-`HttpError` inherits from `Error` class has following extra properties:
+`HttpError` inherits from `Error` class and has the following extra properties:
 
 | Property           | Description                                     | Type   |
 |--------------------|-------------------------------------------------|--------|
-| responseStatus     | status code (404, 500, etc.)                    | Number |
-| responseStatusText | status text (i.e. internal server error)        | String |
+| responseStatus     | Status code (404, 500, etc.)                    | Number |
+| responseStatusText | Status text (i.e. internal server error)        | String |
 | data               | Reponse data. This may contain arbitrary object | Object |
 
 
