@@ -6,26 +6,21 @@ on:
   pull_request:
     branches: [ master ]
 
+concurrency:
+  group: ${{ github.base_ref }}-${{ github.ref_name }}
+  cancel-in-progress: true
+
 jobs:
-  CI:
+  ci:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Clone slack-notify
-        uses: actions/checkout@v2
-        with:
-          repository: 35up/github-action-slack-notify
-          ref: v4
-          token: ${{ secrets.GH_ACCESS_TOKEN }}
-          path: .github/actions/slack-notify
       - name: Setup NodeJS
         uses: actions/setup-node@v2
         with:
           node-version: '14'
-      - name: Configure GitHub NPM Token
-        run: npm config set '//npm.pkg.github.com/:_authToken' "${{ secrets.NPM_TOKEN }}"
       - name: NPM Install
         run: npm i
       - name: Build
@@ -34,25 +29,16 @@ jobs:
         run: npm run lint
       - name: Test
         run: npm run test:coverage
-      - name: Clone jest-coverate-report
-        uses: actions/checkout@v2
-        with:
-          repository: 35up/jest-coverage-report-action
-          ref: v1
-          token: ${{ secrets.GH_ACCESS_TOKEN }}
-          path: .github/actions/jest-coverage-report
-      - name: Code Coverage Report
-        uses: ./.github/actions/jest-coverage-report
+
+  coverage:
+    needs: ci
+    if: success()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ArtiomTr/jest-coverage-report-action@v2
         id: coverage
         with:
           skip-step: all
           coverage-file: coverage/report.json
           base-coverage-file: coverage/report.json
-      - name: Trigger Slack Notification
-        uses: ./.github/actions/slack-notify
-        if: failure()
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.ACTIONS_SLACK_BOT_ID }}
-        with:
-          channel-id: C963N8H3J
-          job-status: ${{ job.status }}
