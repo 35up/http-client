@@ -29,15 +29,8 @@ jobs:
         run: npm run lint
       - name: Test
         run: npm run test:coverage
-
-  coverage:
-    needs: ci
-    if: success()
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ArtiomTr/jest-coverage-report-action@v2.2.1
-        id: coverage
+      - name: Generate jest-coverage-report
+        uses: ArtiomTr/jest-coverage-report-action@v2.2.1
         with:
           skip-step: all
           coverage-file: coverage/report.json
