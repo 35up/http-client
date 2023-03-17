@@ -33,6 +33,7 @@
     "client"
   ],
   "author": "35up GmbH <the.engineers@35up.com>",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/35up/http-client/issues"
   },
