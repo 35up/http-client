@@ -2,15 +2,35 @@ import { TSearchParams } from './types';
 
 
 function isSearchParams(params: unknown): params is TSearchParams {
-  return typeof params === 'object'
-    && !!params
-    && !Array.isArray(params);
+  return params instanceof URLSearchParams || (
+    typeof params === 'object'
+      && !!params
+      && !Array.isArray(params)
+  );
 }
 
 function isValidParamValue(value: unknown): boolean {
   return ['string', 'number', 'boolean'].includes(typeof value)
     && !Number.isNaN(value)
     && value !== '';
+}
+
+function getParamsEntries(
+  params: TSearchParams,
+): [string, string | number | (string | number)[]][] {
+  if (params instanceof URLSearchParams) {
+    return [...params.entries()];
+  }
+
+  return Object.entries(params);
+}
+
+function appendValue(query: URLSearchParams, key: string, value: string): void {
+  if (query.has(key)) {
+    query.set(key, `${query.get(key)},${value}`);
+  } else {
+    query.set(key, value);
+  }
 }
 
 export function addUrlParams(
@@ -24,11 +44,11 @@ export function addUrlParams(
   const [ baseUrl, queryParams ] = url.split('?');
   const query = new URLSearchParams(queryParams);
 
-  Object.entries(params).forEach(([ key, value ]) => {
+  getParamsEntries(params).forEach(([ key, value ]) => {
     if (Array.isArray(value) && value.length) {
-      query.append(key, value.filter(isValidParamValue).toString());
+      appendValue(query, key, value.filter(isValidParamValue).join(','));
     } else if (isValidParamValue(value)) {
-      query.append(key, value.toString());
+      appendValue(query, key, value.toString());
     }
   });
 

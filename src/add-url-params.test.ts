@@ -31,6 +31,18 @@ describe('addUrlParams', () => {
     expect(addUrlParams(url, params)).to.be.equal(expected);
   });
 
+  it('supports params as URLSearchParams', () => {
+    const url = '/path';
+    const params = new URLSearchParams([
+      ['single', 'single'],
+      ['multiple', 'multi1'],
+      ['multiple', '2'],
+    ]);
+
+    const expected = '/path?single=single&multiple=multi1%2C2';
+    expect(addUrlParams(url, params)).to.be.equal(expected);
+  });
+
   it('adds the params correctly when the url has existing url params', () => {
     const url = '/path?partner=35up';
     const params = {
