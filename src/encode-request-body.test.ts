@@ -44,7 +44,7 @@ describe('encodeRequestBody', () => {
 
       expect(result).to.have.property('body').equals(body);
       expect(result).to.have.property('headers')
-        .that.include({'Content-Type': 'multipart/form-data'});
+        .that.not.include.keys(['Content-Type']);
     });
   });
 });

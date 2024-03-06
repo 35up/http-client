@@ -15,7 +15,7 @@ function encodeRequestBodyUrl(body: URLSearchParams): EncondedRequest {
 function encodeRequestBodyMultiPart(body: FormData): EncondedRequest<FormData> {
   return {
     body,
-    headers: {'Content-Type': 'multipart/form-data'},
+    headers: {},
   };
 }
 
