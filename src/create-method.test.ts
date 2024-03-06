@@ -52,14 +52,24 @@ async function testSuccess<TBody, TResponse>(
 }
 
 async function testSuccessWithBody<TBody>(
-  method: TMethod,
-  baseUrl: string,
-  endpointUrl: string,
-  body?: TBody,
-  options?: TOptions,
+  {
+    method,
+    baseUrl,
+    endpointUrl,
+    body,
+    options,
+    expectedBody = JSON.stringify(body),
+  }: {
+    method: TMethod,
+    baseUrl: string,
+    endpointUrl: string,
+    body?: TBody,
+    options?: TOptions,
+    expectedBody?: string
+  },
 ): Promise<void> {
   await testSuccess(method, baseUrl, endpointUrl, body, options);
-  expect(fetch.mock.calls[0][1].body).to.be.deep.equal(JSON.stringify(body));
+  expect(fetch.mock.calls[0][1].body).to.be.deep.equal(expectedBody);
 }
 
 async function testFail(
@@ -106,12 +116,22 @@ describe('services - http', () => {
 
       it('returns data when request is successful', async () => {
         const testBody = {test: 'foo'};
-        await testSuccessWithBody(method, baseUrl, endpointUrl, testBody);
+        await testSuccessWithBody({
+          method,
+          baseUrl,
+          endpointUrl,
+          body: testBody,
+        });
       });
 
       it('Uses the method specified in the function creation', async () => {
         const testBody = {test: 'foo'};
-        await testSuccessWithBody(method, baseUrl, endpointUrl, testBody);
+        await testSuccessWithBody({
+          method,
+          baseUrl,
+          endpointUrl,
+          body: testBody,
+        });
         expect(fetch.mock.calls[0][1].method).to.be.equal('PUT');
       });
 
@@ -129,19 +149,49 @@ describe('services - http', () => {
           .to.be.equals(await decodeResponseBody.firstCall.returnValue);
       });
 
-      it('uses `encodeResponseBody` to encode request body', async () => {
+      it('uses `encodeResponseBody` to encode request object body', async () => {
         const body = {foo: 'bar'};
-        await testSuccessWithBody(method, baseUrl, endpointUrl, body);
+        await testSuccessWithBody({
+          method,
+          baseUrl,
+          endpointUrl,
+          body,
+        });
 
         expect(encodeRequestBody).to.have.been.calledOnce;
         expect(encodeRequestBody).to.have.been.calledWith(body);
         expect(fetch.mock.calls[0][1].body)
           .to.be.equal(encodeRequestBody.firstCall.returnValue.body);
+        expect(fetch.mock.calls[0][1].headers)
+          .to.include({'Content-Type': 'application/json'});
+      });
+
+      it('uses `encodeResponseBody` to encode request string body', async () => {
+        const body = 'foo-bar';
+        await testSuccessWithBody({
+          method,
+          baseUrl,
+          endpointUrl,
+          body,
+          expectedBody: body,
+        });
+
+        expect(encodeRequestBody).to.have.been.calledOnce;
+        expect(encodeRequestBody).to.have.been.calledWith(body);
+        expect(fetch.mock.calls[0][1].body)
+          .to.be.equal(encodeRequestBody.firstCall.returnValue.body);
+        expect(fetch.mock.calls[0][1].headers)
+          .to.not.include.keys(['Content-Type']);
       });
 
       it('adds the headers provided by `encodeResponseBody` in the request', async () => {
         const body = {foo: 'bar'};
-        await testSuccessWithBody(method, baseUrl, endpointUrl, body);
+        await testSuccessWithBody({
+          method,
+          baseUrl,
+          endpointUrl,
+          body,
+        });
 
         expect(fetch.mock.calls[0][1].headers)
           .to.include(encodeRequestBody.firstCall.returnValue.headers);
@@ -150,7 +200,13 @@ describe('services - http', () => {
       it('does not override the other headers of the request with the ones provided by `encodeResponseBody`', async () => {
         const body = {foo: 'bar'};
         const options = {headers: {'Content-Type': 'application/octet-stream'}};
-        await testSuccessWithBody(method, baseUrl, endpointUrl, body, options);
+        await testSuccessWithBody({
+          method,
+          baseUrl,
+          endpointUrl,
+          body,
+          options,
+        });
 
         expect(fetch.mock.calls[0][1].headers).to.include(options.headers);
       });
@@ -161,7 +217,13 @@ describe('services - http', () => {
           headers: {'content-type': () => 'application/testing'},
         };
 
-        await testSuccessWithBody(method, baseUrl, endpointUrl, body, options);
+        await testSuccessWithBody({
+          method,
+          baseUrl,
+          endpointUrl,
+          body,
+          options,
+        });
         expect(fetch.mock.calls[0][1].headers)
           .to.include({'content-type': 'application/testing'});
       });
@@ -252,7 +314,9 @@ describe('services - http', () => {
         });
       });
 
-      describe.each(['HEAD', 'head'] as const)('when the function was created for the %p method', (httpMethod) => {
+      describe.each(
+        ['HEAD', 'head'] as const,
+      )('when the function was created for the %p method', (httpMethod) => {
         beforeEach(() => {
           method = createMethod(httpMethod, baseUrl);
         });
