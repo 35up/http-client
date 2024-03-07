@@ -18,8 +18,7 @@ describe('encodeRequestBody', () => {
       const result = encodeRequestBody(body);
 
       expect(result).to.have.property('body').equals(body);
-      expect(result).to.have.property('headers')
-        .that.include({'Content-Type': 'text/plain'});
+      expect(result).to.not.have.property('headers');
     });
   });
 
@@ -29,9 +28,8 @@ describe('encodeRequestBody', () => {
     it('encodes the body as "application/x-www-form-urlencoded"', () => {
       const result = encodeRequestBody(body);
 
-      expect(result).to.have.property('body').equals(body.toString());
-      expect(result).to.have.property('headers')
-        .that.include({'Content-Type': 'application/x-www-form-urlencoded'});
+      expect(result).to.have.property('body').equals(body);
+      expect(result).to.not.have.property('headers');
     });
   });
 
@@ -43,8 +41,7 @@ describe('encodeRequestBody', () => {
       const result = encodeRequestBody(body);
 
       expect(result).to.have.property('body').equals(body);
-      expect(result).to.have.property('headers')
-        .that.include({'Content-Type': 'multipart/form-data'});
+      expect(result).to.not.have.property('headers');
     });
   });
 });

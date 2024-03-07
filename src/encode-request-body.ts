@@ -1,32 +1,11 @@
 import { THeaders } from './types';
 
-export interface EncondedRequest<T = string> {
-  headers: THeaders;
-  body: T extends string ? string : FormData;
+export interface EncodedRequest<T extends string | FormData | URLSearchParams> {
+  headers?: THeaders;
+  body: T;
 }
 
-function encodeRequestBodyUrl(body: URLSearchParams): EncondedRequest {
-  return {
-    body: body.toString(),
-    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-  };
-}
-
-function encodeRequestBodyMultiPart(body: FormData): EncondedRequest<FormData> {
-  return {
-    body,
-    headers: {'Content-Type': 'multipart/form-data'},
-  };
-}
-
-function encodeRequestBodyTextPlain(body: string): EncondedRequest {
-  return {
-    body,
-    headers: {'Content-Type': 'text/plain'},
-  };
-}
-
-function encodeRequestBodyJson(body: unknown): EncondedRequest {
+function encodeRequestBodyJson(body: unknown): EncodedRequest<string> {
   return {
     body: JSON.stringify(body),
     headers: {'Content-Type': 'application/json'},
@@ -35,24 +14,22 @@ function encodeRequestBodyJson(body: unknown): EncondedRequest {
 
 export function encodeRequestBody<T extends URLSearchParams>(
   body: T,
-): EncondedRequest<string>;
+): EncodedRequest<URLSearchParams>;
 export function encodeRequestBody<T extends FormData>(
   body: T,
-): EncondedRequest<FormData>;
+): EncodedRequest<FormData>;
 export function encodeRequestBody<T>(
   body: T,
-): EncondedRequest<string>;
+): EncodedRequest<string>;
 export function encodeRequestBody(
   body: unknown,
-): EncondedRequest<string | FormData> {
-  if (body instanceof URLSearchParams) {
-    return encodeRequestBodyUrl(body);
-  }
-  if (typeof FormData !== 'undefined' && body instanceof FormData) {
-    return encodeRequestBodyMultiPart(body);
-  }
-  if (typeof body === 'string') {
-    return encodeRequestBodyTextPlain(body);
+): EncodedRequest<string | FormData> {
+  if (
+    body instanceof URLSearchParams
+    || (typeof FormData !== 'undefined' && body instanceof FormData)
+    || typeof body === 'string'
+  ) {
+    return {body};
   }
 
   return encodeRequestBodyJson(body);
