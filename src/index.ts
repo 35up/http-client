@@ -5,6 +5,7 @@ export { encodeRequestBody } from './encode-request-body';
 export { decodeResponseBody } from './decode-response-body';
 export { addUrlParams } from './add-url-params';
 export { HttpError, isHttpError } from './http-error';
+export * from './types';
 
 export const get = createMethod('GET');
 export const post = createMethod('POST');
