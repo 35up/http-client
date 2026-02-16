@@ -2,9 +2,13 @@ function getMessage(data: unknown): string {
   if (typeof data === 'string') {
     return data;
   }
-  const error = data && typeof data === 'object' && data.error;
+  const error = data && typeof data === 'object' && data?.error;
   if (error && typeof error === 'object') {
     return error.message;
+  }
+
+  if (typeof data === 'object' && data?.message) {
+    return data.message;
   }
 
   return error;
