@@ -36,6 +36,14 @@ describe('http-error', () => {
         expect(err.toString()).to.equal('Error: Unauthorized');
       });
     });
+
+    describe('when data has message property directly', () => {
+      it('returns the message from data object', () => {
+        const err = new HttpError({message: 'Direct error message'}, new Response());
+
+        expect(err.toString()).to.equal('Error: Direct error message');
+      });
+    });
   });
 
   it('has responseStatus and responseStatusText', () => {
